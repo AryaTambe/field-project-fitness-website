@@ -1,0 +1,340 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Anand's Fitness Art - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-primary-500 text-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 py-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl font-bold flex items-center">
+                            <span class="mr-2">🏥</span>
+                            Dr. Anand's Fitness Art
+                        </h1>
+                        <p class="text-primary-100 mt-1">Admin Dashboard - Database Management</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-primary-100" id="current-time"></div>
+                        <div class="text-xs text-primary-200" id="server-status">Checking connection...</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total Appointments</p>
+                            <p class="text-3xl font-bold text-gray-900" id="total-appointments">-</p>
+                        </div>
+                        <div class="text-primary-500 text-4xl">📅</div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total Contacts</p>
+                            <p class="text-3xl font-bold text-gray-900" id="total-contacts">-</p>
+                        </div>
+                        <div class="text-blue-500 text-4xl">📧</div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Database Status</p>
+                            <p class="text-lg font-semibold text-green-600">Connected</p>
+                        </div>
+                        <div class="text-green-500 text-4xl">🗄️</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="border-b border-gray-200">
+                    <nav class="flex space-x-8 px-6" aria-label="Tabs">
+                        <button class="tab-button py-4 px-1 border-b-2 font-medium text-sm border-primary-500 text-primary-600" 
+                                data-tab="appointments">
+                            📅 Appointments
+                        </button>
+                        <button class="tab-button py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" 
+                                data-tab="contacts">
+                            📧 Contacts
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Appointments Tab -->
+                <div id="appointments-tab" class="tab-content p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">Recent Appointments</h3>
+                        <button onclick="refreshData()" 
+                                class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-300">
+                            🔄 Refresh
+                        </button>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date/Time</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointments-table" class="bg-white divide-y divide-gray-200">
+                                <!-- Appointments will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Contacts Tab -->
+                <div id="contacts-tab" class="tab-content p-6 hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">Recent Contacts</h3>
+                        <button onclick="refreshData()" 
+                                class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-300">
+                            🔄 Refresh
+                        </button>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contacts-table" class="bg-white divide-y divide-gray-200">
+                                <!-- Contacts will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        // Tab functionality
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const tabName = this.getAttribute('data-tab');
+                showTab(tabName);
+            });
+        });
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Remove active state from all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('border-primary-500', 'text-primary-600');
+                button.classList.add('border-transparent', 'text-gray-500');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            
+            // Add active state to selected button
+            const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
+            activeButton.classList.add('border-primary-500', 'text-primary-600');
+            activeButton.classList.remove('border-transparent', 'text-gray-500');
+        }
+
+        // Load appointments
+        async function loadAppointments() {
+            try {
+                const response = await fetch(`${API_BASE}/appointments`);
+                const data = await response.json();
+                
+                document.getElementById('total-appointments').textContent = data.count || 0;
+                
+                const tbody = document.getElementById('appointments-table');
+                tbody.innerHTML = '';
+                
+                if (data.data && data.data.length > 0) {
+                    data.data.forEach(appointment => {
+                        const statusColor = getStatusColor(appointment.status);
+                        tbody.innerHTML += `
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">${appointment.name}</div>
+                                    <div class="text-sm text-gray-500">${appointment.email}</div>
+                                    <div class="text-sm text-gray-500">${appointment.phone}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    ${appointment.service || 'General'}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <div>${appointment.preferred_date || 'TBD'}</div>
+                                    <div>${appointment.preferred_time || 'TBD'}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${statusColor}">
+                                        ${appointment.status}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                                    <button onclick="updateStatus(${appointment.id}, 'confirmed')" 
+                                            class="text-green-600 hover:text-green-900 font-medium">✓ Confirm</button>
+                                    <button onclick="updateStatus(${appointment.id}, 'cancelled')" 
+                                            class="text-red-600 hover:text-red-900 font-medium">✗ Cancel</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No appointments found</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading appointments:', error);
+                document.getElementById('server-status').textContent = 'Connection Error';
+            }
+        }
+
+        // Load contacts
+        async function loadContacts() {
+            try {
+                const response = await fetch(`${API_BASE}/contacts`);
+                const data = await response.json();
+                
+                document.getElementById('total-contacts').textContent = data.count || 0;
+                
+                const tbody = document.getElementById('contacts-table');
+                tbody.innerHTML = '';
+                
+                if (data.data && data.data.length > 0) {
+                    data.data.forEach(contact => {
+                        tbody.innerHTML += `
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">${contact.name}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    ${contact.email}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    ${contact.phone || 'N/A'}
+                                </td>
+                                <td class="px-6 py-4 max-w-xs">
+                                    <div class="text-sm text-gray-900 truncate" title="${contact.message}">
+                                        ${contact.message.length > 50 ? contact.message.substring(0, 50) + '...' : contact.message}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    ${new Date(contact.created_at).toLocaleDateString()}
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No contacts found</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading contacts:', error);
+            }
+        }
+
+        // Update appointment status
+        async function updateStatus(id, status) {
+            try {
+                const response = await fetch(`${API_BASE}/appointments/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    alert(`Appointment ${status} successfully!`);
+                    loadAppointments();
+                }
+            } catch (error) {
+                console.error('Error updating status:', error);
+            }
+        }
+
+        // Get status color
+        function getStatusColor(status) {
+            switch (status) {
+                case 'pending': return 'bg-yellow-100 text-yellow-800';
+                case 'confirmed': return 'bg-green-100 text-green-800';
+                case 'completed': return 'bg-blue-100 text-blue-800';
+                case 'cancelled': return 'bg-red-100 text-red-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        // Refresh data
+        function refreshData() {
+            loadAppointments();
+            loadContacts();
+        }
+
+        // Update time
+        function updateTime() {
+            document.getElementById('current-time').textContent = new Date().toLocaleString();
+        }
+
+        // Initialize
+        loadAppointments();
+        loadContacts();
+        updateTime();
+        setInterval(updateTime, 1000);
+        setInterval(refreshData, 30000); // Auto-refresh every 30 seconds
+
+        // Check server status
+        fetch(`${API_BASE}/health`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('server-status').textContent = 'Connected - ' + data.database.appointments + ' appointments, ' + data.database.contacts + ' contacts';
+            })
+            .catch(() => {
+                document.getElementById('server-status').textContent = 'Disconnected';
+            });
+    </script>
+</body>
+</html>
+
