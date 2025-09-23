@@ -1,7 +1,7 @@
- const express = require('express');
+const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const path = require('path');
+const path = require('path');  // ✅ Only ONE path declaration
 const { db, initDatabase } = require('./database');
 
 const app = express();
@@ -11,12 +11,10 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use(express.static('public'));
-// Serve frontend files (ADD THIS)
-const path = require('path');
+// Serve frontend files
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// Serve main page (ADD THIS)
+// Serve main page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
 });
@@ -203,6 +201,14 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
+// 404 handler
+app.use('*', (req, res) => {
+    res.status(404).json({
+        success: false,
+        message: 'Endpoint not found'
+    });
+});
+
 // Initialize database and start server
 async function startServer() {
     try {
@@ -222,4 +228,17 @@ async function startServer() {
 }
 
 startServer();
+
+// Graceful shutdown
+process.on('SIGINT', () => {
+    console.log('\n🛑 Shutting down server...');
+    db.close((err) => {
+        if (err) {
+            console.error('❌ Error closing database:', err.message);
+        } else {
+            console.log('✅ Database connection closed');
+        }
+        process.exit(0);
+    });
+});
 
