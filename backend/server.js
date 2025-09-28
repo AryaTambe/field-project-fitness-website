@@ -22,7 +22,7 @@ let isMongoConnected = false;
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+    serverSelectionTimeoutMS: 5000,
     socketTimeoutMS: 45000,
 }).then(() => {
     console.log('✅ MongoDB Atlas connected successfully');
@@ -64,12 +64,12 @@ try {
     console.log('Using in-memory models');
 }
 
-// Admin credentials
+// UPDATED Admin credentials - Arya's personal account
 const adminCredentials = {
-    username: 'admin',
-    email: 'admin@dranandfitness.com',
-    name: 'Dr. Anand Gupta',
-    passwordHash: '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewHbYlgz0zK8tBj2'
+    username: 'aryatambe040',
+    email: 'aryatambe040@gmail.com',
+    name: 'Arya Vinod Tambe',
+    passwordHash: '$2a$12$8K.Wf2q3xVe4jGhN9mP8.u5YtGsQ1rF6pHdL7wE2cX3vB9zA0sT1m' // Password: ^YHNmju7
 };
 
 // Middleware
@@ -77,9 +77,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// Session configuration (works with or without MongoDB)
+// Session configuration
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'dr-anand-fitness-mean-stack-2025',
+    secret: process.env.SESSION_SECRET || 'arya-fitness-mean-stack-2025',
     resave: false,
     saveUninitialized: false,
     store: isMongoConnected ? MongoStore.create({
@@ -89,12 +89,13 @@ app.use(session({
     cookie: { 
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
-        maxAge: 2 * 60 * 60 * 1000 // 2 hours
+        maxAge: 2 * 60 * 60 * 1000
     }
 }));
 
 console.log('🚀 =======================================');
 console.log('🚀 DR. ANAND\'S FITNESS ART - MEAN STACK');
+console.log('🚀 Admin: Arya Vinod Tambe');
 console.log('🚀 MongoDB + Express + Angular + Node.js');
 console.log('🚀 =======================================');
 
@@ -137,21 +138,14 @@ app.get('/api/health', async (req, res) => {
     res.json({ 
         message: 'Dr. Anand\'s Fitness Art MEAN Stack is running perfectly!',
         timestamp: new Date().toISOString(),
+        admin: 'Arya Vinod Tambe',
         database: {
             status: isMongoConnected ? 'MongoDB Atlas Connected' : 'In-Memory Storage Active',
             type: isMongoConnected ? 'MongoDB Atlas' : 'Memory Storage',
             appointments: appointmentCount,
             contacts: contactCount
         },
-        stack: 'MEAN (MongoDB + Express + Angular + Node.js)',
-        features: [
-            'MongoDB Atlas Database',
-            'Express.js Server',
-            'Admin Authentication',
-            'Responsive Design',
-            'Contact & Booking System',
-            'Graceful Fallback Storage'
-        ]
+        stack: 'MEAN (MongoDB + Express + Angular + Node.js)'
     });
 });
 
@@ -186,10 +180,11 @@ app.get('/admin/login', (req, res) => {
                 <!-- Logo -->
                 <div class="text-center mb-8">
                     <div class="w-16 h-16 bg-gradient-to-r from-amber-400 to-amber-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-                        <span class="text-white font-bold text-2xl">DR</span>
+                        <span class="text-white font-bold text-2xl">AT</span>
                     </div>
                     <h1 class="text-3xl font-bold text-white mb-2">Admin Portal</h1>
                     <p class="text-gray-400">Dr. Anand's Fitness Art</p>
+                    <p class="text-amber-400 text-sm">Arya Vinod Tambe</p>
                     <div class="mt-2 text-sm ${isMongoConnected ? 'text-green-400' : 'text-blue-400'}">
                         ✅ ${dbStatus}
                     </div>
@@ -214,7 +209,7 @@ app.get('/admin/login', (req, res) => {
                             <label class="block text-sm font-medium text-gray-300 mb-2">Email or Username</label>
                             <input type="text" id="email" required 
                                    class="w-full bg-slate-700 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-amber-400 focus:outline-none"
-                                   placeholder="admin@dranandfitness.com">
+                                   placeholder="aryatambe040@gmail.com">
                         </div>
                         
                         <div>
@@ -250,10 +245,10 @@ app.get('/admin/login', (req, res) => {
                 <!-- Credentials -->
                 <div class="mt-4 text-center">
                     <details class="text-gray-400 text-sm cursor-pointer">
-                        <summary class="hover:text-gray-300">Default Credentials</summary>
+                        <summary class="hover:text-gray-300">Login Credentials</summary>
                         <div class="glass rounded-lg p-4 mt-2 text-left">
-                            <p><strong>Email:</strong> admin@dranandfitness.com</p>
-                            <p><strong>Password:</strong> DrAnand2025!</p>
+                            <p><strong>Email:</strong> aryatambe040@gmail.com</p>
+                            <p><strong>Password:</strong> ^YHNmju7</p>
                         </div>
                     </details>
                 </div>
@@ -376,7 +371,6 @@ app.get('/admin', requireAuth, async (req, res) => {
             recentAppointments = await Appointment.find().sort({ created_at: -1 }).limit(5);
             recentContacts = await Contact.find().sort({ created_at: -1 }).limit(5);
         } catch (error) {
-            console.log('MongoDB query failed, using fallback');
             totalAppointments = appointments.length;
             totalContacts = contacts.length;
             todayAppointments = appointments.filter(apt => new Date(apt.created_at) >= startOfDay).length;
@@ -420,11 +414,11 @@ app.get('/admin', requireAuth, async (req, res) => {
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
                             <div class="w-10 h-10 bg-gradient-to-r from-amber-400 to-amber-600 rounded-lg flex items-center justify-center">
-                                <span class="text-white font-bold">DR</span>
+                                <span class="text-white font-bold">AT</span>
                             </div>
                             <div>
                                 <h1 class="text-xl font-bold text-amber-400">Dr. Anand's Fitness Art</h1>
-                                <p class="text-gray-400 text-sm">MEAN Stack Dashboard</p>
+                                <p class="text-gray-400 text-sm">MEAN Stack Dashboard - ${req.session.adminName}</p>
                             </div>
                         </div>
                         <div class="flex items-center space-x-4">
@@ -434,7 +428,6 @@ app.get('/admin', requireAuth, async (req, res) => {
                                 </div>
                                 <div class="text-xs text-gray-400">MEAN Stack Architecture</div>
                             </div>
-                            <span class="text-sm text-gray-300 hidden lg:block">${req.session.adminName}</span>
                             <button onclick="window.location.reload()" 
                                     class="bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-lg text-sm">
                                 Refresh
@@ -450,24 +443,24 @@ app.get('/admin', requireAuth, async (req, res) => {
 
             <div class="max-w-7xl mx-auto px-4 py-8">
                 
-                <!-- Success Banner -->
+                <!-- Welcome Banner -->
                 <div class="mb-8">
-                    <div class="glass p-4 rounded-xl ${isMongoConnected ? 'border-green-500/20 bg-green-500/5' : 'border-blue-500/20 bg-blue-500/5'}">
+                    <div class="glass p-6 rounded-xl ${isMongoConnected ? 'border-green-500/20 bg-green-500/5' : 'border-blue-500/20 bg-blue-500/5'}">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
                                 <div class="w-3 h-3 ${isMongoConnected ? 'bg-green-400' : 'bg-blue-400'} rounded-full animate-pulse"></div>
                                 <div>
                                     <h3 class="font-semibold ${isMongoConnected ? 'text-green-400' : 'text-blue-400'}">
-                                        MEAN Stack Dashboard Active
+                                        Welcome ${req.session.adminName}!
                                     </h3>
                                     <p class="text-sm text-gray-300">
-                                        ${isMongoConnected ? 'MongoDB Atlas cloud database connected' : 'Using reliable in-memory storage'}
+                                        MEAN Stack Dashboard - ${isMongoConnected ? 'MongoDB Atlas Connected' : 'Memory Storage Active'}
                                     </p>
                                 </div>
                             </div>
                             <div class="text-right text-sm text-gray-400">
                                 <div>Stack: MongoDB + Express + Angular + Node.js</div>
-                                <div>Status: ${dbStatus} • All Systems Operational</div>
+                                <div>Admin: ${req.session.adminName}</div>
                             </div>
                         </div>
                     </div>
@@ -524,7 +517,7 @@ app.get('/admin', requireAuth, async (req, res) => {
                     </div>
                 </div>
 
-                <!-- Data -->
+                <!-- Data Tables -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     
                     <!-- Appointments -->
@@ -601,7 +594,7 @@ app.get('/admin', requireAuth, async (req, res) => {
                                 ${isMongoConnected ? '🗄️ MongoDB Atlas Active' : '💾 Memory Storage Active'}
                             </div>
                             <div class="text-amber-400">🚀 MEAN Stack</div>
-                            <div class="text-purple-400">🔒 Secure Admin Portal</div>
+                            <div class="text-purple-400">🔒 Admin: ${req.session.adminName}</div>
                             <div class="text-cyan-400">💪 Fitness Platform</div>
                         </div>
                         <p class="text-gray-400 text-sm">
@@ -615,7 +608,7 @@ app.get('/admin', requireAuth, async (req, res) => {
 
             <script>
                 async function logout() {
-                    if (confirm('Are you sure you want to logout from MEAN Stack Dashboard?')) {
+                    if (confirm('Are you sure you want to logout, ${req.session.adminName}?')) {
                         try {
                             const response = await fetch('/admin/logout', { method: 'POST' });
                             const result = await response.json();
@@ -673,7 +666,6 @@ app.get('/admin', requireAuth, async (req, res) => {
                     }
                 }
                 
-                // Auto refresh every 5 minutes
                 setTimeout(() => {
                     window.location.reload();
                 }, 5 * 60 * 1000);
@@ -701,7 +693,6 @@ app.get('/api/appointments', requireAuth, async (req, res) => {
             source: isMongoConnected ? 'MongoDB Atlas' : 'Memory Storage'
         });
     } catch (error) {
-        console.error('Get appointments error:', error);
         res.json({ 
             success: true, 
             count: appointments.length, 
@@ -849,7 +840,6 @@ app.get('/api/contacts', requireAuth, async (req, res) => {
             source: isMongoConnected ? 'MongoDB Atlas' : 'Memory Storage'
         });
     } catch (error) {
-        console.error('Get contacts error:', error);
         res.json({ 
             success: true, 
             count: contacts.length, 
@@ -866,8 +856,9 @@ app.listen(PORT, () => {
     console.log(`📊 Admin Dashboard: http://localhost:${PORT}/admin`);
     console.log(`🔍 API Health: http://localhost:${PORT}/api/health`);
     console.log('🚀 =======================================');
-    console.log('📧 Admin Email: admin@dranandfitness.com');
-    console.log('🔑 Admin Password: DrAnand2025!');
+    console.log('👤 Admin: Arya Vinod Tambe');
+    console.log('📧 Admin Email: aryatambe040@gmail.com');
+    console.log('🔑 Admin Password: ^YHNmju7');
     console.log(`🗄️ Database: ${isMongoConnected ? 'MongoDB Atlas' : 'Memory Storage'}`);
     console.log('🚀 MEAN STACK: MongoDB + Express + Angular + Node.js');
     console.log('🚀 =======================================');
