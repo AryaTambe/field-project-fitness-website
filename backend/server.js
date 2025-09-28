@@ -1,12 +1,17 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+<<<<<<< HEAD
 const path = require('path');
 const mongoose = require('mongoose');
 
 // Import models
 const Appointment = require('./models/Appointment');
 const Contact = require('./models/Contact');
+=======
+const path = require('path');  // ✅ Only ONE path declaration
+const { db, initDatabase } = require('./database');
+>>>>>>> 2a24829d27ccd69c15137a8ef992a682bde7c0fc
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -18,6 +23,7 @@ app.use(bodyParser.json());
 // Serve frontend files
 app.use(express.static(path.join(__dirname, '../frontend')));
 
+<<<<<<< HEAD
 // MongoDB Connection
 const connectDB = async () => {
     try {
@@ -41,6 +47,8 @@ const connectDB = async () => {
 // Connect to database
 connectDB();
 
+=======
+>>>>>>> 2a24829d27ccd69c15137a8ef992a682bde7c0fc
 // Serve main page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
@@ -224,7 +232,49 @@ app.get('/api/contacts', async (req, res) => {
 });
 
 // Update appointment status
+<<<<<<< HEAD
 app.put('/api/appointments/:id/status', async (req, res) => {
+=======
+app.put('/api/appointments/:id/status', (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    
+    const validStatuses = ['pending', 'confirmed', 'completed', 'cancelled'];
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ success: false, message: 'Invalid status' });
+    }
+
+    const stmt = db.prepare("UPDATE appointments SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
+    
+    stmt.run([status, id], function(err) {
+        if (err) {
+            res.status(500).json({ success: false, message: 'Error updating appointment' });
+        } else if (this.changes === 0) {
+            res.status(404).json({ success: false, message: 'Appointment not found' });
+        } else {
+            res.json({ success: true, message: `Appointment status updated to ${status}` });
+        }
+    });
+
+    stmt.finalize();
+});
+
+// Serve admin panel
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+// 404 handler
+app.use('*', (req, res) => {
+    res.status(404).json({
+        success: false,
+        message: 'Endpoint not found'
+    });
+});
+
+// Initialize database and start server
+async function startServer() {
+>>>>>>> 2a24829d27ccd69c15137a8ef992a682bde7c0fc
     try {
         const { id } = req.params;
         const { status } = req.body;
@@ -276,6 +326,7 @@ app.get('/admin', async (req, res) => {
             .sort({ createdAt: -1 })
             .limit(5);
 
+<<<<<<< HEAD
         // Get today's stats
         const today = new Date();
         const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -477,3 +528,18 @@ process.on('SIGINT', async () => {
     console.log('✅ MongoDB connection closed');
     process.exit(0);
 });
+=======
+// Graceful shutdown
+process.on('SIGINT', () => {
+    console.log('\n🛑 Shutting down server...');
+    db.close((err) => {
+        if (err) {
+            console.error('❌ Error closing database:', err.message);
+        } else {
+            console.log('✅ Database connection closed');
+        }
+        process.exit(0);
+    });
+});
+
+>>>>>>> 2a24829d27ccd69c15137a8ef992a682bde7c0fc
