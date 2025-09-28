@@ -1,24 +1,17 @@
 {
-  "name": "dr-anand-fitness-backend-mongodb",
+  "name": "dr-anand-fitness-backend",
   "version": "1.0.0",
   "description": "Dr. Anand's Fitness Art with MongoDB Database",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-<<<<<<< HEAD
     "dev": "nodemon server.js"
-=======
-    "dev": "nodemon server.js",
-    "build": "npm rebuild sqlite3",
-    "postinstall": "npm rebuild sqlite3"
->>>>>>> 2a24829d27ccd69c15137a8ef992a682bde7c0fc
   },
   "dependencies": {
     "express": "^4.18.2",
     "cors": "^2.8.5",
     "body-parser": "^1.20.2",
-    "mongoose": "^8.0.0",
-    "bcryptjs": "^2.4.3"
+    "mongoose": "^8.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
@@ -27,4 +20,3 @@
     "node": ">=18.0.0"
   }
 }
-
