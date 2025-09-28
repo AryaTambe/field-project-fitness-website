@@ -1,7 +1,7 @@
 {
-  "name": "dr-anand-fitness-backend",
-  "version": "1.0.0",
-  "description": "Dr. Anand's Fitness Art with MongoDB Database",
+  "name": "dr-anand-fitness-mongodb",
+  "version": "2.0.0",
+  "description": "Dr. Anand's Fitness Art - Professional Website with MongoDB Atlas",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -11,12 +11,25 @@
     "express": "^4.18.2",
     "cors": "^2.8.5",
     "body-parser": "^1.20.2",
-    "mongoose": "^8.0.0"
+    "bcryptjs": "^2.4.3",
+    "express-session": "^1.17.3",
+    "mongoose": "^7.5.0",
+    "connect-mongo": "^5.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "keywords": [
+    "fitness",
+    "wellness",
+    "mongodb",
+    "atlas",
+    "database",
+    "professional"
+  ],
+  "author": "Dr. Anand Gupta",
+  "license": "MIT"
 }
