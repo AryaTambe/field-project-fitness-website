@@ -1,61 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr. Anand's Fitness Art - Professional Fitness & Wellness</title>
-    <meta name="description" content="Transform your health with Dr. Anand's professional fitness training, nutrition counseling, and healing programs.">
+    <title>Dr. Anand's Fitness Art - Fitness, Nutrition & Healing</title>
+    <meta name="description" content="We believe everyone should have opportunity to enjoy a Fit & Healthy Lifestyle. Professional fitness training, expert nutrition counseling, and holistic healing services.">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Custom Tailwind Config -->
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    },
                     colors: {
                         primary: {
-                            50: '#fffbeb',
-                            100: '#fef3c7',
-                            200: '#fde68a', 
                             300: '#fcd34d',
-                            400: '#fbbf24',
+                            400: '#fbbf24', 
                             500: '#f59e0b',
-                            600: '#d97706',
-                            700: '#b45309',
-                        }
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                    animation: {
-                        'fade-in-up': 'fadeInUp 0.6s ease-out',
-                        'slide-in-left': 'slideInLeft 0.6s ease-out',
-                        'slide-in-right': 'slideInRight 0.6s ease-out',
-                        'bounce-gentle': 'bounceGentle 2s ease-in-out infinite',
-                        'float': 'float 3s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(30px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' }
-                        },
-                        slideInLeft: {
-                            '0%': { opacity: '0', transform: 'translateX(-50px)' },
-                            '100%': { opacity: '1', transform: 'translateX(0)' }
-                        },
-                        slideInRight: {
-                            '0%': { opacity: '0', transform: 'translateX(50px)' },
-                            '100%': { opacity: '1', transform: 'translateX(0)' }
-                        },
-                        bounceGentle: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' }
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-20px)' }
+                            600: '#d97706'
                         }
                     }
                 }
@@ -63,242 +35,374 @@
         }
     </script>
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Custom Styles -->
     <style>
-        html { scroll-behavior: smooth; }
-        .nav-link { position: relative; }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -5px;
-            left: 50%;
-            background: #fbbf24;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
+        /* Custom Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
         }
-        .nav-link:hover::after,
-        .nav-link.active::after {
+        
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
         }
-        .service-card:hover .service-icon {
-            transform: scale(1.1) rotate(5deg);
+        
+        .bg-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #fbbf24, #3b82f6, #8b5cf6);
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .bg-particle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .bg-particle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 15%;
+            animation-delay: -7s;
+        }
+        
+        .bg-particle:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 30%;
+            right: 30%;
+            animation-delay: -14s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(20px) rotate(240deg); }
+        }
+        
+        /* Glass Effect */
+        .glass {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Smooth Transitions */
+        .smooth-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Navigation Fixed */
+        .navbar-fixed {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 50;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+        }
+        
+        /* Logo Badge */
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            color: white;
+            margin-right: 12px;
+        }
+        
+        /* Professional Badge */
+        .pro-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Social Media Icons */
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .whatsapp { background: linear-gradient(45deg, #25d366, #128c7e); }
+        .facebook { background: linear-gradient(45deg, #1877f2, #42a5f5); }
+        
+        /* Responsive Text */
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 2.5rem;
+                line-height: 1.1;
+            }
         }
     </style>
 </head>
-<body class="font-sans antialiased text-gray-800 overflow-x-hidden">
+<body class="bg-slate-900 text-white overflow-x-hidden">
+
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="bg-particle"></div>
+        <div class="bg-particle"></div>
+        <div class="bg-particle"></div>
+    </div>
 
     <!-- Navigation -->
-    <nav class="bg-white shadow-sm fixed w-full top-0 z-50 transition-all duration-300" id="navbar">
+    <nav class="navbar-fixed border-b border-gray-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <!-- Logo -->
-                <div class="flex items-center space-x-3 hover:scale-105 transition-transform duration-300">
-                    <img src="assets/logo.png" alt="Dr. Anand's Fitness Art" class="h-10 w-10 rounded-full object-cover shadow-sm">
+                <div class="flex items-center">
+                    <div class="logo-badge">DR</div>
                     <div>
-                        <h2 class="text-lg font-semibold text-gray-800">Dr. Anand's Fitness Art</h2>
-                        <p class="text-xs text-gray-500">Fitness, Nutrition & Healing</p>
+                        <h1 class="text-xl font-bold text-primary-400">Dr. Anand's</h1>
+                        <p class="text-xs text-gray-400">Fitness Art</p>
                     </div>
                 </div>
                 
-                <!-- Desktop Navigation -->
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#home" class="nav-link text-gray-700 hover:text-primary-500 px-3 py-2 text-sm font-medium transition-colors duration-300">Home</a>
-                        <a href="#services" class="nav-link text-gray-700 hover:text-primary-500 px-3 py-2 text-sm font-medium transition-colors duration-300">Services</a>
-                        <a href="#about" class="nav-link text-gray-700 hover:text-primary-500 px-3 py-2 text-sm font-medium transition-colors duration-300">About</a>
-                        <a href="#testimonials" class="nav-link text-gray-700 hover:text-primary-500 px-3 py-2 text-sm font-medium transition-colors duration-300">Reviews</a>
-                        <a href="#contact" class="nav-link text-gray-700 hover:text-primary-500 px-3 py-2 text-sm font-medium transition-colors duration-300">Contact</a>
-                    </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-300 hover:text-primary-400 smooth-transition">Home</a>
+                    <a href="#services" class="text-gray-300 hover:text-primary-400 smooth-transition">Services</a>
+                    <a href="#about" class="text-gray-300 hover:text-primary-400 smooth-transition">About</a>
+                    <a href="#contact" class="text-gray-300 hover:text-primary-400 smooth-transition">Contact</a>
+                    
+                    <!-- Admin Login Button -->
+                    <a href="/admin/login" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg font-semibold smooth-transition">
+                        Admin Login
+                    </a>
                 </div>
-                
-                <!-- Mobile menu button -->
+
+                <!-- Mobile Menu Button -->
                 <div class="md:hidden">
-                    <button id="nav-toggle" class="text-gray-700 hover:text-primary-500 focus:outline-none focus:text-primary-500">
-                        <svg class="h-6 w-6 fill-current" viewBox="0 0 24 24">
-                            <path class="nav-line-1" d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-primary-400 p-2">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
                 </div>
             </div>
         </div>
-        
-        <!-- Mobile Navigation -->
-        <div id="nav-menu" class="md:hidden hidden bg-white border-t border-gray-200 shadow-lg">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="#home" class="nav-link block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-500 hover:bg-gray-50 rounded-md transition-colors duration-300">Home</a>
-                <a href="#services" class="nav-link block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-500 hover:bg-gray-50 rounded-md transition-colors duration-300">Services</a>
-                <a href="#about" class="nav-link block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-500 hover:bg-gray-50 rounded-md transition-colors duration-300">About</a>
-                <a href="#testimonials" class="nav-link block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-500 hover:bg-gray-50 rounded-md transition-colors duration-300">Reviews</a>
-                <a href="#contact" class="nav-link block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-500 hover:bg-gray-50 rounded-md transition-colors duration-300">Contact</a>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden glass mx-4 mb-4 rounded-lg">
+            <div class="py-4 space-y-2">
+                <a href="#home" class="block px-4 py-2 text-gray-300 hover:text-primary-400">Home</a>
+                <a href="#services" class="block px-4 py-2 text-gray-300 hover:text-primary-400">Services</a>
+                <a href="#about" class="block px-4 py-2 text-gray-300 hover:text-primary-400">About</a>
+                <a href="#contact" class="block px-4 py-2 text-gray-300 hover:text-primary-400">Contact</a>
+                <div class="border-t border-gray-600 mt-4 pt-4">
+                    <a href="/admin/login" class="block px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg text-center font-semibold">
+                        Admin Login
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="bg-gradient-to-br from-primary-50 to-white pt-20 pb-16 min-h-screen flex items-center">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-6 leading-tight animate-fade-in-up">
-                    Transform Your Life with Expert 
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-primary-600">Fitness & Nutrition</span>
-                </h1>
-                <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up">
-                    Professional fitness training, expert nutrition counseling, and holistic healing services 
-                    designed for your unique wellness journey.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16 animate-fade-in-up">
-                    <button onclick="scrollToSection('contact')" 
-                            class="bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-                        <span class="flex items-center justify-center">
-                            <span class="mr-2">🚀</span>
-                            Start Your Journey
-                        </span>
-                    </button>
-                    <button onclick="scrollToSection('services')" 
-                            class="border-2 border-primary-500 text-primary-600 hover:bg-primary-500 hover:text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105">
-                        Our Services
-                    </button>
-                </div>
+    <section id="home" class="min-h-screen flex items-center justify-center pt-16">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <!-- Professional Badge -->
+            <div class="mb-6">
+                <span class="pro-badge">Professional Fitness</span>
             </div>
             
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-                <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                    <div class="text-3xl md:text-4xl font-bold text-primary-500 mb-2" data-target="500">0</div>
-                    <div class="text-gray-600 font-medium">Happy Clients</div>
+            <!-- Hero Title -->
+            <h1 class="hero-title text-4xl md:text-6xl lg:text-7xl font-black mb-6">
+                <span class="block bg-gradient-to-r from-primary-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    Dr. Anand's
+                </span>
+                <span class="block text-white mt-2">Fitness Art</span>
+            </h1>
+            
+            <!-- Updated Hero Subtitle with Real Tagline -->
+            <p class="text-lg md:text-xl text-gray-300 mb-4 max-w-3xl mx-auto leading-relaxed">
+                <span class="text-primary-400 font-semibold text-2xl block mb-4">
+                    "We believe everyone should have opportunity to enjoy a Fit & Healthy Lifestyle"
+                </span>
+                Transform your life through expert 
+                <span class="text-primary-400 font-semibold">fitness training</span>, 
+                personalized <span class="text-blue-400 font-semibold">nutrition guidance</span>, 
+                and holistic <span class="text-purple-400 font-semibold">healing therapies</span>
+            </p>
+            
+            <!-- Hero Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                <button onclick="scrollToSection('services')" class="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold smooth-transition hover-lift">
+                    Book Your Session
+                </button>
+                <button onclick="scrollToSection('about')" class="border border-gray-600 hover:border-primary-400 text-gray-300 hover:text-white px-8 py-3 rounded-lg font-semibold smooth-transition">
+                    Learn More
+                </button>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                <div class="glass p-6 rounded-xl text-center hover-lift smooth-transition">
+                    <div class="text-3xl font-bold text-primary-400 mb-2">500+</div>
+                    <div class="text-gray-400 text-sm">Happy Clients</div>
                 </div>
-                <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                    <div class="text-3xl md:text-4xl font-bold text-primary-500 mb-2" data-target="5">0</div>
-                    <div class="text-gray-600 font-medium">Years Experience</div>
+                <div class="glass p-6 rounded-xl text-center hover-lift smooth-transition">
+                    <div class="text-3xl font-bold text-blue-400 mb-2">10+</div>
+                    <div class="text-gray-400 text-sm">Years Experience</div>
                 </div>
-                <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                    <div class="text-3xl md:text-4xl font-bold text-primary-500 mb-2" data-target="15">0</div>
-                    <div class="text-gray-600 font-medium">Programs</div>
+                <div class="glass p-6 rounded-xl text-center hover-lift smooth-transition">
+                    <div class="text-3xl font-bold text-purple-400 mb-2">50+</div>
+                    <div class="text-gray-400 text-sm">Programs</div>
                 </div>
-                <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                    <div class="text-3xl md:text-4xl font-bold text-primary-500 mb-2" data-target="98">0</div>
-                    <div class="text-gray-600 font-medium">Success Rate</div>
+                <div class="glass p-6 rounded-xl text-center hover-lift smooth-transition">
+                    <div class="text-3xl font-bold text-green-400 mb-2">95%</div>
+                    <div class="text-gray-400 text-sm">Success Rate</div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="bg-gray-50 py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="services" class="py-20">
+        <div class="max-w-6xl mx-auto px-4">
+            <!-- Section Header -->
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Our Professional Services</h2>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Comprehensive wellness programs tailored to your goals</p>
-                <div class="w-24 h-1 bg-gradient-to-r from-primary-400 to-primary-600 mx-auto mt-4 rounded-full"></div>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">
+                    <span class="bg-gradient-to-r from-primary-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+                        Our Services
+                    </span>
+                </h2>
+                <p class="text-lg text-gray-300 max-w-2xl mx-auto">
+                    Comprehensive fitness, nutrition & healing solutions tailored to your unique goals
+                </p>
             </div>
-            
+
+            <!-- Services Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                
                 <!-- Personal Training -->
-                <div class="service-card bg-white rounded-xl p-8 text-center shadow-sm border border-gray-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-                    <div class="service-icon text-5xl mb-6 transition-transform duration-300">💪</div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Personal Training</h3>
-                    <p class="text-gray-600 mb-4 leading-relaxed">One-on-one customized fitness programs tailored to your goals.</p>
-                    <div class="text-lg font-semibold text-primary-500 mb-4">₹2000/session</div>
-                    <ul class="text-left text-sm text-gray-500 mb-6 space-y-2">
-                        <li class="flex items-center">
-                            <span class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-3 text-xs text-white">✓</span>
-                            Custom workouts
-                        </li>
-                        <li class="flex items-center">
-                            <span class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-3 text-xs text-white">✓</span>
-                            Progress tracking
-                        </li>
-                        <li class="flex items-center">
-                            <span class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-3 text-xs text-white">✓</span>
-                            Nutrition guidance
-                        </li>
+                <div class="glass p-6 rounded-xl hover-lift smooth-transition cursor-pointer" onclick="bookService('Personal Training')">
+                    <div class="w-12 h-12 bg-primary-500 rounded-lg flex items-center justify-center mb-4">
+                        <span class="text-white font-bold text-lg">PT</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Personal Training</h3>
+                    <p class="text-gray-300 mb-4 text-sm">One-on-one customized workout sessions designed for your fitness level</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-2xl font-bold text-primary-400">₹2,000</span>
+                        <span class="text-gray-400 text-sm">per session</span>
+                    </div>
+                    <ul class="text-xs text-gray-400 space-y-2 mb-6">
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Personalized workout plans</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Form correction & technique</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Progress tracking</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Nutrition guidance</li>
                     </ul>
-                    <button class="service-btn w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg" 
-                            data-service="Personal Training">
+                    <button class="w-full bg-primary-500 hover:bg-primary-600 text-white py-2 rounded-lg font-semibold smooth-transition">
                         Book Now
                     </button>
                 </div>
-                
+
                 <!-- Group Classes -->
-                <div class="service-card bg-white rounded-xl p-8 text-center shadow-sm border border-gray-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-                    <div class="service-icon text-5xl mb-6 transition-transform duration-300">👥</div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Group Classes</h3>
-                    <p class="text-gray-600 mb-4 leading-relaxed">Energetic group fitness sessions for motivation and community.</p>
-                    <div class="text-lg font-semibold text-primary-500 mb-4">₹800/session</div>
-                    <ul class="text-left text-sm text-gray-500 mb-6 space-y-2">
-                        <li class="flex items-center">
-                            <span class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-3 text-xs text-white">✓</span>
-                            Variety of classes
-                        </li>
-                        <li class="flex items-center">
-                            <span class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-3 text-xs text-white">✓</span>
-                            Expert instructors
-                        </li>
-                        <li class="flex items-center">
-                            <span class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-3 text-xs text-white">✓</span>
-                            Community support
-                        </li>
+                <div class="glass p-6 rounded-xl hover-lift smooth-transition cursor-pointer" onclick="bookService('Group Classes')">
+                    <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
+                        <span class="text-white font-bold text-lg">GC</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Group Classes</h3>
+                    <p class="text-gray-300 mb-4 text-sm">High-energy group workouts that build community while achieving goals</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-2xl font-bold text-blue-400">₹800</span>
+                        <span class="text-gray-400 text-sm">per session</span>
+                    </div>
+                    <ul class="text-xs text-gray-400 space-y-2 mb-6">
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> HIIT & Cardio classes</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Strength training groups</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Yoga & flexibility</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Motivational environment</li>
                     </ul>
-                    <button class="service-btn w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg" 
-                            data-service="Group Classes">
-                        Book Now
+                    <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-semibold smooth-transition">
+                        Join Class
                     </button>
                 </div>
-                
+
                 <!-- Nutrition Counseling -->
-                <div class="service-card bg-white rounded-xl p-8 text-center shadow-sm border border-gray-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-                    <div class="service-icon text-5xl mb-6 transition-transform duration-300">🥗</div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Nutrition Counseling</h3>
-                    <p class="text-gray-600 mb-4 leading-relaxed">Professional dietary guidance for optimal health.</p>
-                    <div class="text-lg font-semibold text-primary-500 mb-4">₹1500/session</div>
-                    <ul class="text-left text-sm text-gray-500 mb-6 space-y-2">
-                        <li class="flex items-center">
-                            <span class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-3 text-xs text-white">✓</span>
-                            Meal planning
-                        </li>
-                        <li class="flex items-center">
-                            <span class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-3 text-xs text-white">✓</span>
-                            Diet assessment
-                        </li>
-                        <li class="flex items-center">
-                            <span class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-3 text-xs text-white">✓</span>
-                            Lifestyle coaching
-                        </li>
+                <div class="glass p-6 rounded-xl hover-lift smooth-transition cursor-pointer" onclick="bookService('Nutrition Counseling')">
+                    <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-4">
+                        <span class="text-white font-bold text-lg">NC</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Nutrition Counseling</h3>
+                    <p class="text-gray-300 mb-4 text-sm">Expert dietary guidance and meal planning for optimal health</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-2xl font-bold text-green-400">₹1,500</span>
+                        <span class="text-gray-400 text-sm">per session</span>
+                    </div>
+                    <ul class="text-xs text-gray-400 space-y-2 mb-6">
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Custom meal plans</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Dietary assessments</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Supplement guidance</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Lifestyle coaching</li>
                     </ul>
-                    <button class="service-btn w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg" 
-                            data-service="Nutrition Counseling">
-                        Book Now
+                    <button class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-semibold smooth-transition">
+                        Get Started
                     </button>
                 </div>
-                
-                <!-- Rehabilitation -->
-                <div class="service-card bg-white rounded-xl p-8 text-center shadow-sm border border-gray-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-                    <div class="service-icon text-5xl mb-6 transition-transform duration-300">🏥</div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Rehabilitation</h3>
-                    <p class="text-gray-600 mb-4 leading-relaxed">Recovery programs for injuries and therapy needs.</p>
-                    <div class="text-lg font-semibold text-primary-500 mb-4">₹2500/session</div>
-                    <ul class="text-left text-sm text-gray-500 mb-6 space-y-2">
-                        <li class="flex items-center">
-                            <span class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-3 text-xs text-white">✓</span>
-                            Injury recovery
-                        </li>
-                        <li class="flex items-center">
-                            <span class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-3 text-xs text-white">✓</span>
-                            Physical therapy
-                        </li>
-                        <li class="flex items-center">
-                            <span class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-3 text-xs text-white">✓</span>
-                            Pain management
-                        </li>
+
+                <!-- Healing Therapy -->
+                <div class="glass p-6 rounded-xl hover-lift smooth-transition cursor-pointer" onclick="bookService('Healing Therapy')">
+                    <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mb-4">
+                        <span class="text-white font-bold text-lg">HT</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Healing Therapy</h3>
+                    <p class="text-gray-300 mb-4 text-sm">Holistic healing therapies for stress management and recovery</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-2xl font-bold text-purple-400">₹2,500</span>
+                        <span class="text-gray-400 text-sm">per session</span>
+                    </div>
+                    <ul class="text-xs text-gray-400 space-y-2 mb-6">
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Stress management</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Recovery programs</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Mental wellness</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">✓</span> Movement restoration</li>
                     </ul>
-                    <button class="service-btn w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg" 
-                            data-service="Rehabilitation">
-                        Book Now
+                    <button class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 rounded-lg font-semibold smooth-transition">
+                        Start Healing
                     </button>
                 </div>
             </div>
@@ -306,115 +410,69 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="bg-white py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="about" class="py-20">
+        <div class="max-w-6xl mx-auto px-4">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">About Dr. Anand's Fitness Art</h2>
-                    <p class="text-lg text-gray-600 mb-8 leading-relaxed">
-                        With over 5 years of experience in fitness training, nutrition counseling, and healing therapies, 
-                        Dr. Anand's Fitness Art has helped over 500 clients achieve their wellness goals through our 
-                        comprehensive and personalized approach.
-                    </p>
-                    
-                    <div class="space-y-6">
-                        <div class="flex items-start space-x-4">
-                            <div class="text-3xl">🎯</div>
-                            <div>
-                                <h4 class="text-lg font-semibold text-gray-800 mb-2">Personalized Approach</h4>
-                                <p class="text-gray-600">Every program tailored to your unique needs and goals</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start space-x-4">
-                            <div class="text-3xl">🏆</div>
-                            <div>
-                                <h4 class="text-lg font-semibold text-gray-800 mb-2">Proven Results</h4>
-                                <p class="text-gray-600">98% success rate with measurable health improvements</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start space-x-4">
-                            <div class="text-3xl">💝</div>
-                            <div>
-                                <h4 class="text-lg font-semibold text-gray-800 mb-2">Holistic Care</h4>
-                                <p class="text-gray-600">Complete wellness for mind, body, and spirit</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 
-                <div class="flex justify-center">
-                    <div class="bg-gray-50 rounded-2xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-                        <div class="text-6xl mb-4">👨‍⚕️</div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">Dr. Anand Gupta</h3>
-                        <p class="text-gray-600 mb-4">Founder & Lead Wellness Expert</p>
-                        <div class="text-primary-500 text-lg font-medium">⭐⭐⭐⭐⭐ 5.0</div>
+                <!-- About Content -->
+                <div class="space-y-6">
+                    <h2 class="text-3xl md:text-4xl font-bold">
+                        <span class="bg-gradient-to-r from-primary-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+                            Meet Dr. Anand
+                        </span>
+                    </h2>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        With over 10 years of experience in fitness, nutrition & healing, Dr. Anand has transformed 
+                        the lives of hundreds of clients through his unique approach to holistic health and wellness.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold text-sm">C</span>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-primary-400 mb-1">Certified Expert</h4>
+                                <p class="text-gray-300 text-sm">Advanced certifications in fitness training, nutrition, and healing therapies</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold text-sm">R</span>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-blue-400 mb-1">Proven Results</h4>
+                                <p class="text-gray-300 text-sm">95% success rate with clients achieving their fitness and health goals</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold text-sm">H</span>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-purple-400 mb-1">Holistic Approach</h4>
+                                <p class="text-gray-300 text-sm">Combining fitness training, nutrition counseling, and healing therapies for complete transformation</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Testimonials Section -->
-    <section id="testimonials" class="bg-gray-50 py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">What Our Clients Say</h2>
-                <p class="text-xl text-gray-600">Real transformations from real people</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Testimonial 1 -->
-                <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                    <div class="text-primary-400 text-lg mb-4">⭐⭐⭐⭐⭐</div>
-                    <p class="text-gray-600 mb-6 leading-relaxed italic">
-                        "Dr. Anand's approach transformed my lifestyle completely. The personalized training 
-                        and nutrition plan helped me lose 15kg in 6 months. Highly recommended!"
-                    </p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">
-                            P
+                <!-- About Image -->
+                <div class="text-center">
+                    <div class="glass p-8 rounded-xl hover-lift smooth-transition">
+                        <div class="w-24 h-24 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span class="text-white font-bold text-3xl">DA</span>
                         </div>
-                        <div>
-                            <div class="font-semibold text-gray-800">Priya Sharma</div>
-                            <div class="text-sm text-gray-500">Software Engineer</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Testimonial 2 -->
-                <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                    <div class="text-primary-400 text-lg mb-4">⭐⭐⭐⭐⭐</div>
-                    <p class="text-gray-600 mb-6 leading-relaxed italic">
-                        "Excellent nutrition counseling! My energy levels are amazing now and I've never 
-                        felt healthier. The group classes are also fantastic for motivation."
-                    </p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">
-                            R
-                        </div>
-                        <div>
-                            <div class="font-semibold text-gray-800">Rajesh Kumar</div>
-                            <div class="text-sm text-gray-500">Business Owner</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Testimonial 3 -->
-                <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                    <div class="text-primary-400 text-lg mb-4">⭐⭐⭐⭐⭐</div>
-                    <p class="text-gray-600 mb-6 leading-relaxed italic">
-                        "The rehabilitation program helped me recover completely from my sports injury. 
-                        Professional, caring, and incredibly effective treatment."
-                    </p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">
-                            A
-                        </div>
-                        <div>
-                            <div class="font-semibold text-gray-800">Anjali Mehta</div>
-                            <div class="text-sm text-gray-500">Yoga Instructor</div>
+                        <h3 class="text-2xl font-bold mb-2 text-primary-400">Dr. Anand Gupta</h3>
+                        <p class="text-gray-300 mb-6">Certified Fitness, Nutrition & Healing Expert</p>
+                        <div class="grid grid-cols-2 gap-4 text-center">
+                            <div>
+                                <div class="text-xl font-bold text-primary-400">500+</div>
+                                <div class="text-xs text-gray-400">Clients Transformed</div>
+                            </div>
+                            <div>
+                                <div class="text-xl font-bold text-blue-400">10+</div>
+                                <div class="text-xs text-gray-400">Years Experience</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -423,120 +481,307 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="bg-white py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Ready to Transform Your Life?</h2>
-                <p class="text-xl text-gray-600">Get in touch and start your wellness journey today</p>
+    <section id="contact" class="py-20">
+        <div class="max-w-4xl mx-auto px-4">
+            <!-- Section Header -->
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                    <span class="bg-gradient-to-r from-primary-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+                        Get In Touch
+                    </span>
+                </h2>
+                <p class="text-lg text-gray-300">
+                    Ready to start your transformation? Contact us today for a consultation
+                </p>
             </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <!-- Contact Info -->
-                <div class="space-y-8">
-                    <div class="flex items-start space-x-4">
-                        <div class="text-2xl">📞</div>
+
+            <!-- Contact Form -->
+            <div class="glass p-8 rounded-xl">
+                <form id="contactForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Phone</h4>
-                            <p class="text-gray-600">
-                                <a href="tel:+919999999999" class="text-primary-500 hover:text-primary-600 transition-colors duration-300">
-                                    +91-99999-99999
-                                </a>
-                            </p>
+                            <label class="block text-sm font-semibold text-gray-300 mb-2">Name *</label>
+                            <input type="text" id="contactName" required class="w-full bg-slate-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-primary-400 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-300 mb-2">Email *</label>
+                            <input type="email" id="contactEmail" required class="w-full bg-slate-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-primary-400 focus:outline-none">
                         </div>
                     </div>
-                    
-                    <div class="flex items-start space-x-4">
-                        <div class="text-2xl">✉️</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Email</h4>
-                            <p class="text-gray-600">
-                                <a href="mailto:info@anandfitness.com" class="text-primary-500 hover:text-primary-600 transition-colors duration-300">
-                                    info@anandfitness.com
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-start space-x-4">
-                        <div class="text-2xl">📍</div>
-                        <div>
-                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Address</h4>
-                            <p class="text-gray-600">123 Fitness Street<br>Health City, State 12345</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-start space-x-4">
-                        <div class="text-2xl">🕒</div>
-                        <div>
-                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Hours</h4>
-                            <p class="text-gray-600">Mon-Fri: 5AM-10PM<br>Sat-Sun: 6AM-8PM</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Contact Form -->
-                <div class="bg-gray-50 rounded-2xl p-8">
-                    <form id="contact-form" class="space-y-6">
-                        <div>
-                            <input type="text" name="name" placeholder="Your Name *" required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 transition-colors duration-300 bg-white">
+                            <label class="block text-sm font-semibold text-gray-300 mb-2">Phone</label>
+                            <input type="tel" id="contactPhone" class="w-full bg-slate-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-primary-400 focus:outline-none">
                         </div>
                         <div>
-                            <input type="email" name="email" placeholder="Your Email *" required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 transition-colors duration-300 bg-white">
-                        </div>
-                        <div>
-                            <input type="tel" name="phone" placeholder="Your Phone"
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 transition-colors duration-300 bg-white">
-                        </div>
-                        <div>
-                            <select name="service" 
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 transition-colors duration-300 bg-white">
-                                <option value="">Select Service (Optional)</option>
+                            <label class="block text-sm font-semibold text-gray-300 mb-2">Service</label>
+                            <select id="contactService" class="w-full bg-slate-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-primary-400 focus:outline-none">
+                                <option value="">Select a service</option>
                                 <option value="Personal Training">Personal Training</option>
                                 <option value="Group Classes">Group Classes</option>
                                 <option value="Nutrition Counseling">Nutrition Counseling</option>
-                                <option value="Rehabilitation">Rehabilitation</option>
-                                <option value="General Consultation">General Consultation</option>
+                                <option value="Healing Therapy">Healing Therapy</option>
                             </select>
                         </div>
-                        <div>
-                            <textarea name="message" placeholder="Your Message *" required rows="4"
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 transition-colors duration-300 bg-white resize-vertical"></textarea>
-                        </div>
-                        <button type="submit" 
-                                class="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg">
-                            <span class="btn-text">Send Message</span>
-                            <span class="btn-loader hidden">Sending...</span>
-                        </button>
-                    </form>
-                </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-2">Message *</label>
+                        <textarea id="contactMessage" required rows="4" class="w-full bg-slate-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-primary-400 focus:outline-none resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-primary-500 hover:bg-primary-600 text-white py-3 rounded-lg font-semibold smooth-transition">
+                        Send Message
+                    </button>
+                </form>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-                <div class="mb-6 md:mb-0">
-                    <h3 class="text-xl font-bold text-primary-400 mb-2">Dr. Anand's Fitness Art</h3>
-                    <p class="text-gray-300 max-w-md">Transforming lives through fitness, nutrition, and healing</p>
+    <footer class="py-16 border-t border-gray-700">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+                
+                <!-- Brand -->
+                <div class="md:col-span-2 space-y-4">
+                    <div class="flex items-center mb-4">
+                        <div class="logo-badge">DR</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-primary-400">Dr. Anand's</h3>
+                            <p class="text-gray-400 text-sm">Fitness Art</p>
+                        </div>
+                    </div>
+                    <p class="text-primary-400 font-semibold text-lg mb-4">
+                        "We believe everyone should have opportunity to enjoy a Fit & Healthy Lifestyle"
+                    </p>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                        Transforming lives through professional fitness training, personalized nutrition counseling, and holistic healing therapies. Join our community of 500+ satisfied clients.
+                    </p>
+                    
+                    <!-- Real Social Media Links -->
+                    <div>
+                        <h4 class="font-semibold text-white mb-4">Follow Us</h4>
+                        <div class="flex space-x-4">
+                            <a href="https://www.instagram.com/anandsfitnessart/" target="_blank" class="social-icon instagram" title="Follow us on Instagram">
+                                IG
+                            </a>
+                            <a href="https://wa.me/919999999999" target="_blank" class="social-icon whatsapp" title="WhatsApp Us">
+                                WA
+                            </a>
+                            <a href="https://facebook.com/anandsfitnessart" target="_blank" class="social-icon facebook" title="Like us on Facebook">
+                                FB
+                            </a>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Connect with us for daily fitness tips and inspiration</p>
+                    </div>
                 </div>
-                <div class="flex space-x-8">
-                    <a href="#home" class="text-gray-300 hover:text-primary-400 transition-colors duration-300">Home</a>
-                    <a href="#services" class="text-gray-300 hover:text-primary-400 transition-colors duration-300">Services</a>
-                    <a href="#about" class="text-gray-300 hover:text-primary-400 transition-colors duration-300">About</a>
-                    <a href="#testimonials" class="text-gray-300 hover:text-primary-400 transition-colors duration-300">Reviews</a>
-                    <a href="#contact" class="text-gray-300 hover:text-primary-400 transition-colors duration-300">Contact</a>
+
+                <!-- Services -->
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Services</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#services" class="hover:text-primary-400 smooth-transition">Personal Training</a></li>
+                        <li><a href="#services" class="hover:text-primary-400 smooth-transition">Group Classes</a></li>
+                        <li><a href="#services" class="hover:text-primary-400 smooth-transition">Nutrition Counseling</a></li>
+                        <li><a href="#services" class="hover:text-primary-400 smooth-transition">Healing Therapy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info with REAL ADDRESS -->
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Contact</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li class="flex items-center">
+                            <span class="w-4 h-4 bg-green-500 rounded text-xs flex items-center justify-center mr-2 font-bold">P</span>
+                            <a href="tel:+919999999999" class="hover:text-primary-400 smooth-transition">+91-99999-99999</a>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-4 h-4 bg-blue-500 rounded text-xs flex items-center justify-center mr-2 font-bold">E</span>
+                            <a href="mailto:info@anandsfitnessart.com" class="hover:text-primary-400 smooth-transition">info@anandsfitnessart.com</a>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-4 h-4 bg-purple-500 rounded text-xs flex items-center justify-center mr-2 font-bold mt-0.5">L</span>
+                            <div class="text-xs">
+                                <p>Gala No. 11, 1st floor, Tinwala Compound,</p>
+                                <p>Makwana Rd, behind Keys Nestor Hotel,</p>
+                                <p>opp. Vasant Oasis, Sankasth Pada Welfare Society,</p>
+                                <p>Marol, Andheri East, Mumbai, Maharashtra 400059</p>
+                            </div>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-4 h-4 bg-orange-500 rounded text-xs flex items-center justify-center mr-2 font-bold">T</span>
+                            <span class="text-xs">Mon-Fri: 5AM-10PM<br>Sat-Sun: 6AM-8PM</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Admin -->
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Admin</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="/admin/login" class="hover:text-primary-400 smooth-transition">Sign In</a></li>
+                        <li><a href="/admin" class="hover:text-primary-400 smooth-transition">Dashboard</a></li>
+                        <li><a href="/api/health" class="hover:text-primary-400 smooth-transition">System Status</a></li>
+                    </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-700 pt-8 text-center">
-                <p class="text-gray-400">&copy; 2025 Dr. Anand's Fitness Art. All rights reserved. | Designed for wellness excellence.</p>
+
+            <!-- Footer Bottom -->
+            <div class="border-t border-gray-700 mt-12 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="text-gray-400 text-sm mb-4 md:mb-0">
+                        <p>&copy; 2025 Dr. Anand's Fitness Art. All rights reserved.</p>
+                    </div>
+                    <div class="flex items-center space-x-6 text-gray-400 text-sm">
+                        <a href="#" class="hover:text-primary-400 smooth-transition">Privacy Policy</a>
+                        <a href="#" class="hover:text-primary-400 smooth-transition">Terms of Service</a>
+                        <a href="#contact" class="hover:text-primary-400 smooth-transition">Contact Us</a>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden">
+        <div class="glass max-w-md mx-4 w-full p-6 rounded-xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-primary-400">Book Service</h3>
+                <button onclick="closeBookingModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <form id="bookingForm" class="space-y-4">
+                <input type="hidden" id="bookingService">
+                <div>
+                    <input type="text" id="bookingName" required placeholder="Your Name" class="w-full bg-slate-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-primary-400 focus:outline-none">
+                </div>
+                <div>
+                    <input type="email" id="bookingEmail" required placeholder="Your Email" class="w-full bg-slate-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-primary-400 focus:outline-none">
+                </div>
+                <div>
+                    <input type="tel" id="bookingPhone" required placeholder="Your Phone" class="w-full bg-slate-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-primary-400 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="date" id="bookingDate" class="bg-slate-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-primary-400 focus:outline-none">
+                    <input type="time" id="bookingTime" class="bg-slate-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-primary-400 focus:outline-none">
+                </div>
+                <div>
+                    <textarea id="bookingMessage" rows="3" placeholder="Any specific requirements..." class="w-full bg-slate-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-primary-400 focus:outline-none resize-none"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-primary-500 hover:bg-primary-600 text-white py-3 rounded-lg font-semibold smooth-transition">
+                    Book Appointment
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Booking functionality
+        function bookService(service) {
+            document.getElementById('bookingService').value = service;
+            document.getElementById('bookingModal').classList.remove('hidden');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.add('hidden');
+        }
+
+        // Form submissions
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('contactName').value,
+                email: document.getElementById('contactEmail').value,
+                phone: document.getElementById('contactPhone').value,
+                service: document.getElementById('contactService').value,
+                message: document.getElementById('contactMessage').value
+            };
+
+            try {
+                const response = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Message sent successfully!');
+                    document.getElementById('contactForm').reset();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('Something went wrong. Please try again.');
+            }
+        });
+
+        document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('bookingName').value,
+                email: document.getElementById('bookingEmail').value,
+                phone: document.getElementById('bookingPhone').value,
+                service: document.getElementById('bookingService').value,
+                date: document.getElementById('bookingDate').value,
+                time: document.getElementById('bookingTime').value,
+                message: document.getElementById('bookingMessage').value
+            };
+
+            try {
+                const response = await fetch('/api/appointments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Appointment booked successfully!');
+                    closeBookingModal();
+                    document.getElementById('bookingForm').reset();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('Something went wrong. Please try again.');
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('bookingModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('bookingModal')) {
+                closeBookingModal();
+            }
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
