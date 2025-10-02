@@ -2,38 +2,37 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
-const bcrypt = require('bcryptjs');
-const session = require('express-session');
 const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// BULLETPROOF MongoDB Connection with Fallback
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://fitness:fitness123@cluster0.abc123.mongodb.net/dranandfitness?retryWrites=true&w=majority';
+// MongoDB Connection (Optional - falls back to memory storage)
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://fitness:fitness123@cluster0.mongodb.net/dranandfitness?retryWrites=true&w=majority';
 
-// In-memory fallback storage
+// In-memory storage (always works)
 let appointments = [];
 let contacts = [];
 let isMongoConnected = false;
 
-// MongoDB Connection with Error Handling
-mongoose.connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 45000,
-}).then(() => {
-    console.log('✅ MongoDB Atlas connected successfully');
-    isMongoConnected = true;
-}).catch((err) => {
-    console.log('⚠️ MongoDB connection failed, using in-memory storage');
-    console.log('Error:', err.message);
-    isMongoConnected = false;
-});
+// Try MongoDB connection (optional)
+if (MONGODB_URI) {
+    mongoose.connect(MONGODB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+    }).then(() => {
+        console.log('✅ MongoDB connected successfully');
+        isMongoConnected = true;
+    }).catch((err) => {
+        console.log('⚠️ MongoDB connection failed, using in-memory storage');
+        console.log('Error:', err.message);
+        isMongoConnected = false;
+    });
+}
 
-// MongoDB Schemas
+// MongoDB Schemas (if connected)
 const AppointmentSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
@@ -58,19 +57,13 @@ const ContactSchema = new mongoose.Schema({
 // MongoDB Models (only if connected)
 let Appointment, Contact;
 try {
-    Appointment = mongoose.model('Appointment', AppointmentSchema);
-    Contact = mongoose.model('Contact', ContactSchema);
+    if (isMongoConnected) {
+        Appointment = mongoose.model('Appointment', AppointmentSchema);
+        Contact = mongoose.model('Contact', ContactSchema);
+    }
 } catch (error) {
     console.log('Using in-memory models');
 }
-
-// Admin credentials (for basic auth)
-const adminCredentials = {
-    username: 'aryatambe040',
-    email: 'aryatambe040@gmail.com',
-    name: 'Dr. Anand',
-    passwordHash: '$2a$12$8K.Wf2q3xVe4jGhN9mP8.u5YtGsQ1rF6pHdL7wE2cX3vB9zA0sT1m' // Password: ^YHNmju7
-};
 
 // Middleware
 app.use(cors());
@@ -79,7 +72,7 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 
 console.log('🚀 =======================================');
 console.log('🚀 DR. ANAND\'S FITNESS ART - MEAN STACK');
-console.log('🚀 MongoDB + Express + Angular + Node.js');
+console.log('🚀 Yellow & White Theme - No Login Required');
 console.log('🚀 =======================================');
 
 // Main page
@@ -106,45 +99,20 @@ app.get('/api/health', async (req, res) => {
     }
     
     res.json({ 
-        message: 'Dr. Anand\'s Fitness Art MEAN Stack is running perfectly!',
+        message: 'Dr. Anand\'s Fitness Art is running perfectly!',
         timestamp: new Date().toISOString(),
         database: {
-            status: isMongoConnected ? 'MongoDB Atlas Connected' : 'In-Memory Storage Active',
-            type: isMongoConnected ? 'MongoDB Atlas' : 'Memory Storage',
+            status: isMongoConnected ? 'MongoDB Connected' : 'Memory Storage Active',
             appointments: appointmentCount,
             contacts: contactCount
         },
-        stack: 'MEAN (MongoDB + Express + Angular + Node.js)'
+        theme: 'Yellow & White',
+        admin_access: '/admin (No login required)'
     });
 });
 
-// Direct admin access with simple browser authentication
+// **DIRECT ADMIN ACCESS - NO LOGIN REQUIRED**
 app.get('/admin', async (req, res) => {
-    // Simple browser authentication
-    const authHeader = req.headers.authorization;
-    let isAuthenticated = false;
-    
-    if (authHeader) {
-        const credentials = Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':');
-        const email = credentials[0];
-        const password = credentials[1];
-        
-        try {
-            if ((email === adminCredentials.username || email === adminCredentials.email) &&
-                await bcrypt.compare(password, adminCredentials.passwordHash)) {
-                isAuthenticated = true;
-            }
-        } catch (error) {
-            console.log('Auth error:', error.message);
-        }
-    }
-    
-    if (!isAuthenticated) {
-        res.setHeader('WWW-Authenticate', 'Basic realm="Admin Access"');
-        res.status(401).send('Authentication required');
-        return;
-    }
-
     let totalAppointments = 0;
     let totalContacts = 0;
     let todayAppointments = 0;
@@ -180,7 +148,7 @@ app.get('/admin', async (req, res) => {
         recentContacts = contacts.slice(-5).reverse();
     }
     
-    const dbStatus = isMongoConnected ? 'Connected' : 'Memory Storage';
+    const dbStatus = isMongoConnected ? 'MongoDB Connected' : 'Memory Storage';
 
     res.send(`
         <!DOCTYPE html>
@@ -191,40 +159,52 @@ app.get('/admin', async (req, res) => {
             <title>Admin Dashboard - Dr. Anand's Fitness Art</title>
             <script src="https://cdn.tailwindcss.com"></script>
             <style>
-                body { font-family: 'Inter', sans-serif; }
-                .glass { 
-                    background: rgba(15, 23, 42, 0.8); 
-                    backdrop-filter: blur(20px); 
-                    border: 1px solid rgba(255, 255, 255, 0.1); 
+                body { 
+                    font-family: 'Inter', sans-serif; 
+                    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fffbeb 100%);
+                }
+                .admin-card {
+                    background: white;
+                    border: 2px solid #fef3c7;
+                    border-radius: 12px;
+                    padding: 24px;
+                    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.1);
+                    transition: all 0.3s ease;
+                }
+                .admin-card:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 30px rgba(245, 158, 11, 0.2);
+                }
+                .stat-number {
+                    font-size: 2.5rem;
+                    font-weight: 800;
+                    color: #f59e0b;
                 }
             </style>
         </head>
-        <body class="bg-slate-900 text-white min-h-screen">
+        <body class="bg-amber-50 text-gray-800 min-h-screen">
             
             <!-- Header -->
-            <header class="bg-slate-800 border-b border-gray-700 sticky top-0 z-40">
+            <header class="bg-white border-b-2 border-amber-200 sticky top-0 z-40 shadow-lg">
                 <div class="max-w-7xl mx-auto px-4 py-4">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
-                            <div class="w-10 h-10 bg-gradient-to-r from-amber-400 to-amber-600 rounded-lg flex items-center justify-center">
-                                <span class="text-white font-bold">DR</span>
+                            <div class="w-12 h-12 bg-gradient-to-r from-amber-400 to-amber-600 rounded-lg flex items-center justify-center">
+                                <span class="text-white font-bold text-lg">DR</span>
                             </div>
                             <div>
-                                <h1 class="text-xl font-bold text-amber-400">Dr. Anand's Fitness Art</h1>
-                                <p class="text-gray-400 text-sm">Admin Dashboard</p>
+                                <h1 class="text-2xl font-bold text-amber-600">Dr. Anand's Fitness Art</h1>
+                                <p class="text-gray-600 text-sm">Admin Dashboard</p>
                             </div>
                         </div>
                         <div class="flex items-center space-x-4">
-                            <div class="hidden md:block text-right">
-                                <div class="text-sm font-semibold ${isMongoConnected ? 'text-green-400' : 'text-blue-400'}">
-                                    🗄️ Database: ${dbStatus}
-                                </div>
-                                <div class="text-xs text-gray-400">MEAN Stack Architecture</div>
-                            </div>
-                            <button onclick="window.location.reload()" 
-                                    class="bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-lg text-sm">
-                                Refresh
-                            </button>
+                            <div class="text-right">
+                                <div class="text-sm font-semibold ${isMongoConnected ? 'text-green-600' : 'text-blue-600'}">
+                                    🗄️ ${dbStatus}
+                                </div>                            </div>
+                            <a href="/" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-semibold">
+                                View Website
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -234,23 +214,20 @@ app.get('/admin', async (req, res) => {
                 
                 <!-- Welcome Banner -->
                 <div class="mb-8">
-                    <div class="glass p-6 rounded-xl ${isMongoConnected ? 'border-green-500/20 bg-green-500/5' : 'border-blue-500/20 bg-blue-500/5'}">
+                    <div class="admin-card ${isMongoConnected ? 'border-green-300 bg-green-50' : 'border-blue-300 bg-blue-50'}">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <div class="w-3 h-3 ${isMongoConnected ? 'bg-green-400' : 'bg-blue-400'} rounded-full animate-pulse"></div>
+                                <div class="w-3 h-3 ${isMongoConnected ? 'bg-green-500' : 'bg-blue-500'} rounded-full animate-pulse"></div>
                                 <div>
-                                    <h3 class="font-semibold ${isMongoConnected ? 'text-green-400' : 'text-blue-400'}">
-                                        Admin Dashboard Active
+                                    <h3 class="font-bold ${isMongoConnected ? 'text-green-800' : 'text-blue-800'}">
+                                        Admin Dashboard Active ✨
                                     </h3>
-                                    <p class="text-sm text-gray-300">
-                                        ${isMongoConnected ? 'MongoDB Atlas Connected' : 'Memory Storage Active'}
+                                    <p class="text-sm ${isMongoConnected ? 'text-green-700' : 'text-blue-700'}">
+                                        ${isMongoConnected ? 'MongoDB Database Connected & Operational' : 'Memory Storage Active & Operational'}
                                     </p>
                                 </div>
                             </div>
-                            <div class="text-right text-sm text-gray-400">
-                                <div>Stack: MongoDB + Express + Angular + Node.js</div>
-                                <div>Status: All Systems Operational</div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -258,18 +235,18 @@ app.get('/admin', async (req, res) => {
                 <!-- Quick Actions -->
                 <div class="mb-8">
                     <div class="flex flex-wrap gap-4">
-                        <a href="/" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-semibold">
+                        <a href="/" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold">
                             🏠 View Website
                         </a>
                         <button onclick="exportData('appointments')" 
-                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold">
                             📊 Export Appointments
                         </button>
                         <button onclick="exportData('contacts')" 
-                                class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                                class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold">
                             📧 Export Contacts
                         </button>
-                        <a href="/api/health" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+                        <a href="/api/health" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold">
                             🔍 System Health
                         </a>
                     </div>
@@ -277,32 +254,32 @@ app.get('/admin', async (req, res) => {
                 
                 <!-- Stats -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="glass p-6 rounded-xl text-center">
-                        <div class="text-3xl mb-2">📅</div>
-                        <div class="text-2xl font-bold text-amber-400">${totalAppointments}</div>
-                        <div class="text-gray-400 text-sm">Total Appointments</div>
+                    <div class="admin-card text-center">
+                        <div class="text-4xl mb-2">📅</div>
+                        <div class="stat-number">${totalAppointments}</div>
+                        <div class="text-gray-600 font-medium">Total Appointments</div>
                         <div class="text-xs text-gray-500 mt-1">+${todayAppointments} today</div>
                     </div>
                     
-                    <div class="glass p-6 rounded-xl text-center">
-                        <div class="text-3xl mb-2">📈</div>
-                        <div class="text-2xl font-bold text-green-400">${todayAppointments}</div>
-                        <div class="text-gray-400 text-sm">Today's Bookings</div>
-                        <div class="text-xs text-gray-500 mt-1">New today</div>
+                    <div class="admin-card text-center">
+                        <div class="text-4xl mb-2">📈</div>
+                        <div class="stat-number">${todayAppointments}</div>
+                        <div class="text-gray-600 font-medium">Today's Bookings</div>
+                        <div class="text-xs text-gray-500 mt-1">New bookings</div>
                     </div>
                     
-                    <div class="glass p-6 rounded-xl text-center">
-                        <div class="text-3xl mb-2">📧</div>
-                        <div class="text-2xl font-bold text-blue-400">${totalContacts}</div>
-                        <div class="text-gray-400 text-sm">Total Messages</div>
+                    <div class="admin-card text-center">
+                        <div class="text-4xl mb-2">📧</div>
+                        <div class="stat-number">${totalContacts}</div>
+                        <div class="text-gray-600 font-medium">Total Messages</div>
                         <div class="text-xs text-gray-500 mt-1">+${todayContacts} today</div>
                     </div>
                     
-                    <div class="glass p-6 rounded-xl text-center">
-                        <div class="text-3xl mb-2">🚀</div>
-                        <div class="text-2xl font-bold text-purple-400">MEAN</div>
-                        <div class="text-gray-400 text-sm">Stack Active</div>
-                        <div class="text-xs text-gray-500 mt-1">All systems go</div>
+                    <div class="admin-card text-center">
+                        <div class="text-4xl mb-2">🚀</div>
+                        <div class="stat-number text-green-500">LIVE</div>
+                        <div class="text-gray-600 font-medium">System Status</div>
+                        <div class="text-xs text-gray-500 mt-1">All systems operational</div>
                     </div>
                 </div>
 
@@ -310,65 +287,65 @@ app.get('/admin', async (req, res) => {
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     
                     <!-- Appointments -->
-                    <div class="glass p-6 rounded-xl">
-                        <h2 class="text-lg font-bold text-amber-400 mb-4">
-                            📅 Recent Appointments ${isMongoConnected ? '(MongoDB)' : '(Memory)'}
+                    <div class="admin-card">
+                        <h2 class="text-lg font-bold text-amber-600 mb-4">
+                            📅 Recent Appointments (${isMongoConnected ? 'MongoDB' : 'Memory'})
                         </h2>
                         <div class="space-y-4 max-h-96 overflow-y-auto">
                             ${recentAppointments.length > 0 ? 
                                 recentAppointments.map(apt => 
-                                    `<div class="bg-slate-700 p-4 rounded-lg">
+                                    `<div class="bg-amber-50 p-4 rounded-lg border border-amber-200">
                                         <div class="flex justify-between items-start mb-2">
                                             <div>
-                                                <h4 class="font-semibold text-white">${apt.name}</h4>
-                                                <p class="text-amber-400 text-sm">${apt.service}</p>
+                                                <h4 class="font-semibold text-gray-800">${apt.name}</h4>
+                                                <p class="text-amber-600 text-sm font-medium">${apt.service}</p>
                                             </div>
-                                            <span class="text-xs bg-yellow-600 text-white px-2 py-1 rounded">
+                                            <span class="text-xs bg-yellow-500 text-white px-2 py-1 rounded font-medium">
                                                 ${apt.status}
                                             </span>
                                         </div>
-                                        <p class="text-gray-300 text-sm">📧 ${apt.email}</p>
-                                        <p class="text-gray-300 text-sm">📱 ${apt.phone}</p>
-                                        ${apt.preferred_date ? `<p class="text-gray-300 text-sm">📅 ${apt.preferred_date} ${apt.preferred_time || ''}</p>` : ''}
-                                        <p class="text-gray-400 text-xs mt-2">${new Date(apt.created_at).toLocaleString()}</p>
-                                        ${apt.message ? `<p class="text-gray-300 text-sm mt-2 italic">"${apt.message}"</p>` : ''}
+                                        <p class="text-gray-700 text-sm">📧 ${apt.email}</p>
+                                        <p class="text-gray-700 text-sm">📱 ${apt.phone}</p>
+                                        ${apt.preferred_date ? `<p class="text-gray-700 text-sm">📅 ${apt.preferred_date} ${apt.preferred_time || ''}</p>` : ''}
+                                        <p class="text-gray-500 text-xs mt-2">${new Date(apt.created_at).toLocaleString()}</p>
+                                        ${apt.message ? `<p class="text-gray-700 text-sm mt-2 italic">"${apt.message}"</p>` : ''}
                                     </div>`
                                 ).join('') 
-                                : `<div class="text-center py-8">
+                                : `<div class="text-center py-8 text-gray-600">
                                     <div class="text-4xl mb-2">📅</div>
-                                    <p class="text-gray-400">No appointments yet</p>
-                                    <p class="text-gray-500 text-sm">Bookings will appear here</p>
+                                    <p class="font-medium">No appointments yet</p>
+                                    <p class="text-sm text-gray-500">New bookings will appear here</p>
                                 </div>`
                             }
                         </div>
                     </div>
 
                     <!-- Contacts -->
-                    <div class="glass p-6 rounded-xl">
-                        <h2 class="text-lg font-bold text-blue-400 mb-4">
-                            📧 Recent Messages ${isMongoConnected ? '(MongoDB)' : '(Memory)'}
+                    <div class="admin-card">
+                        <h2 class="text-lg font-bold text-blue-600 mb-4">
+                            📧 Recent Messages (${isMongoConnected ? 'MongoDB' : 'Memory'})
                         </h2>
                         <div class="space-y-4 max-h-96 overflow-y-auto">
                             ${recentContacts.length > 0 ? 
                                 recentContacts.map(contact => 
-                                    `<div class="bg-slate-700 p-4 rounded-lg">
+                                    `<div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
                                         <div class="flex justify-between items-start mb-2">
                                             <div>
-                                                <h4 class="font-semibold text-white">${contact.name}</h4>
-                                                ${contact.service ? `<p class="text-blue-400 text-sm">${contact.service}</p>` : ''}
+                                                <h4 class="font-semibold text-gray-800">${contact.name}</h4>
+                                                ${contact.service ? `<p class="text-blue-600 text-sm font-medium">${contact.service}</p>` : ''}
                                             </div>
-                                            <span class="text-xs bg-green-600 text-white px-2 py-1 rounded">new</span>
+                                            <span class="text-xs bg-green-500 text-white px-2 py-1 rounded font-medium">new</span>
                                         </div>
-                                        <p class="text-gray-300 text-sm">📧 ${contact.email}</p>
-                                        ${contact.phone ? `<p class="text-gray-300 text-sm">📱 ${contact.phone}</p>` : ''}
-                                        <p class="text-gray-400 text-xs mt-2">${new Date(contact.created_at).toLocaleString()}</p>
-                                        <p class="text-gray-300 text-sm mt-2 italic">"${contact.message}"</p>
+                                        <p class="text-gray-700 text-sm">📧 ${contact.email}</p>
+                                        ${contact.phone ? `<p class="text-gray-700 text-sm">📱 ${contact.phone}</p>` : ''}
+                                        <p class="text-gray-500 text-xs mt-2">${new Date(contact.created_at).toLocaleString()}</p>
+                                        <p class="text-gray-700 text-sm mt-2 italic">"${contact.message}"</p>
                                     </div>`
                                 ).join('') 
-                                : `<div class="text-center py-8">
+                                : `<div class="text-center py-8 text-gray-600">
                                     <div class="text-4xl mb-2">📧</div>
-                                    <p class="text-gray-400">No messages yet</p>
-                                    <p class="text-gray-500 text-sm">Contact submissions will appear here</p>
+                                    <p class="font-medium">No messages yet</p>
+                                    <p class="text-sm text-gray-500">Contact form submissions will appear here</p>
                                 </div>`
                             }
                         </div>
@@ -377,19 +354,17 @@ app.get('/admin', async (req, res) => {
 
                 <!-- Footer -->
                 <div class="mt-12 text-center">
-                    <div class="glass p-6 rounded-xl">
+                    <div class="admin-card">
                         <div class="flex justify-center space-x-8 flex-wrap gap-4 mb-4">
-                            <div class="${isMongoConnected ? 'text-green-400' : 'text-blue-400'}">
-                                ${isMongoConnected ? '🗄️ MongoDB Atlas Active' : '💾 Memory Storage Active'}
+                            <div class="${isMongoConnected ? 'text-green-600' : 'text-blue-600'} font-semibold">
+                                ${isMongoConnected ? '🗄️ MongoDB Atlas Active' : 'Memory Storage Active'}
                             </div>
-                            <div class="text-amber-400">🚀 MEAN Stack</div>
-                            <div class="text-purple-400">🔒 Secure Admin Panel</div>
-                            <div class="text-cyan-400">💪 Fitness Platform</div>
+                            
                         </div>
-                        <p class="text-gray-400 text-sm">
+                        <p class="text-gray-600 text-sm">
                             Last updated: ${new Date().toLocaleString()} • 
                             Database: ${dbStatus} • 
-                            System Status: Operational
+                            Admin Access: Direct URL
                         </p>
                     </div>
                 </div>
@@ -432,12 +407,13 @@ app.get('/admin', async (req, res) => {
                         document.body.removeChild(a);
                         window.URL.revokeObjectURL(url);
                         
-                        alert('✅ Data exported successfully from MEAN Stack!');
+                        alert('✅ Data exported successfully!');
                     } catch (error) {
                         alert('Export failed: ' + error.message);
                     }
                 }
                 
+                // Auto refresh every 5 minutes
                 setTimeout(() => {
                     window.location.reload();
                 }, 5 * 60 * 1000);
@@ -447,7 +423,7 @@ app.get('/admin', async (req, res) => {
     `);
 });
 
-// API Routes with MongoDB fallback
+// API Routes
 app.get('/api/appointments', async (req, res) => {
     try {
         let appointmentsData = [];
@@ -462,7 +438,7 @@ app.get('/api/appointments', async (req, res) => {
             success: true, 
             count: appointmentsData.length, 
             data: appointmentsData,
-            source: isMongoConnected ? 'MongoDB Atlas' : 'Memory Storage'
+            source: isMongoConnected ? 'MongoDB' : 'Memory Storage'
         });
     } catch (error) {
         res.json({ 
@@ -507,7 +483,7 @@ app.post('/api/appointments', async (req, res) => {
                 res.status(201).json({
                     success: true,
                     message: 'Appointment booked successfully! We\'ll contact you soon.',
-                    source: 'MongoDB Atlas'
+                    source: 'MongoDB'
                 });
                 return;
             } catch (mongoError) {
@@ -566,7 +542,7 @@ app.post('/api/contact', async (req, res) => {
                 res.json({
                     success: true,
                     message: 'Thank you for your message! We\'ll get back to you within 24 hours.',
-                    source: 'MongoDB Atlas'
+                    source: 'MongoDB'
                 });
                 return;
             } catch (mongoError) {
@@ -609,7 +585,7 @@ app.get('/api/contacts', async (req, res) => {
             success: true, 
             count: contactsData.length, 
             data: contactsData,
-            source: isMongoConnected ? 'MongoDB Atlas' : 'Memory Storage'
+            source: isMongoConnected ? 'MongoDB' : 'Memory Storage'
         });
     } catch (error) {
         res.json({ 
@@ -622,14 +598,13 @@ app.get('/api/contacts', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`✅ MEAN Stack Server running on http://localhost:${PORT}`);
+    console.log(`✅ Server running on http://localhost:${PORT}`);
     console.log(`🌐 Website: http://localhost:${PORT}`);
     console.log(`📊 Admin Dashboard: http://localhost:${PORT}/admin`);
     console.log(`🔍 API Health: http://localhost:${PORT}/api/health`);
     console.log('🚀 =======================================');
-    console.log('📧 Admin Access: aryatambe040@gmail.com');
-    console.log('🔑 Admin Password: ^YHNmju7');
-    console.log(`🗄️ Database: ${isMongoConnected ? 'MongoDB Atlas' : 'Memory Storage'}`);
-    console.log('🚀 MEAN STACK: MongoDB + Express + Angular + Node.js');
+    console.log('🎨 Theme: Yellow & White Professional');
+    console.log('🔓 Admin Access: Direct URL (No Login)');
+    console.log(`🗄️ Database: ${isMongoConnected ? 'MongoDB Connected' : 'Memory Storage Active'}`);
     console.log('🚀 =======================================');
 });
