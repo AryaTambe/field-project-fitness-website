@@ -222,6 +222,22 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 25px rgba(245, 158, 11, 0.15);
         }
+
+        /* Profile Photo Placeholder */
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #f59e0b;
+            background: #fef3c7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #d97706;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="bg-amber-50">
@@ -234,7 +250,7 @@
                 <div class="logo-container">
                     <img src="assets/logo.jpg" alt="Dr. Anand's Fitness Art Logo" class="logo-image">
                     <div class="logo-text">
-                        <div class="logo-title">Dr. Anand's Fitness Art</div>
+                        <div class="logo-title"> <a href="#"> Dr. Anand's Fitness Art</a></div>
                         <div class="logo-subtitle">Fitness, Nutrition & Healing</div>
                     </div>
                 </div>
@@ -301,7 +317,7 @@
             <!-- Hero Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                 <button onclick="scrollToSection('services')" class="btn-primary">
-                    🚀 Start Your Journey
+                     Start Your Journey
                 </button>
                 <button onclick="scrollToSection('services')" class="btn-secondary">
                     Our Services
@@ -311,15 +327,15 @@
             <!-- Stats -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
                 <div class="stat-card">
-                    <div class="text-4xl font-bold text-primary-500 mb-2">500+</div>
+                    <div class="text-4xl font-bold text-primary-500 mb-2">1000+</div>
                     <div class="text-gray-600 font-medium">Happy Clients</div>
                 </div>
                 <div class="stat-card">
-                    <div class="text-4xl font-bold text-primary-500 mb-2">5+</div>
+                    <div class="text-4xl font-bold text-primary-500 mb-2">14+</div>
                     <div class="text-gray-600 font-medium">Years Experience</div>
                 </div>
                 <div class="stat-card">
-                    <div class="text-4xl font-bold text-primary-500 mb-2">50+</div>
+                    <div class="text-4xl font-bold text-primary-500 mb-2">6</div>
                     <div class="text-gray-600 font-medium">Programs</div>
                 </div>
                 <div class="stat-card">
@@ -330,7 +346,7 @@
         </div>
     </section>
 
-    <!-- Services Section - UPDATED WITH NEW PRICING -->
+    <!-- Services Section -->
     <section id="services" class="py-20 bg-white">
         <div class="max-w-6xl mx-auto px-4">
             <!-- Section Header -->
@@ -343,7 +359,7 @@
                 </p>
             </div>
 
-            <!-- Services Grid - UPDATED WITH NEW SERVICES -->
+            <!-- Services Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 
                 <!-- Complete Health & Pain Relief Package -->
@@ -481,7 +497,7 @@
         </div>
     </section>
 
-    <!-- About Section -->
+    <!-- About Section - UPDATED WITH REAL DR. ANAND GUPTA STORY -->
     <section id="about" class="py-20 bg-amber-50">
         <div class="max-w-6xl mx-auto px-4">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -489,61 +505,72 @@
                 <!-- About Content -->
                 <div class="space-y-6">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-800">
-                        Founder & Lead Wellness Expert
+                        Transforming Lives Through Fitness
                     </h2>
+                    <div class="bg-gradient-to-r from-primary-500 to-primary-600 text-white p-6 rounded-xl">
+                        <p class="text-lg font-semibold mb-2">Dr. Anand Gupta</p>
+                        <p class="text-sm opacity-90">Certified Fitness Expert & Nutritionist</p>
+                    </div>
                     <p class="text-lg text-gray-600 leading-relaxed">
-                        With over 5 years of experience in fitness training, nutrition counseling, and healing therapies, 
-                        Dr. Anand's Fitness Art has helped over 500 clients achieve their wellness goals through our 
-                        comprehensive and personalized approach.
+                        Dr. Anand Gupta, a certified fitness expert and nutritionist with over <strong>14 years of experience</strong>, has empowered hundreds of clients to achieve their wellness goals. As a <strong>polio survivor turned fitness entrepreneur</strong>, he specializes in natural health transformations for various conditions including <strong>PCOD, thyroid, diabetes, and more</strong>.
+                    </p>
+                    <p class="text-lg text-gray-600 leading-relaxed">
+                        His personalized approach at Anand's Fitness Art guarantees results through comprehensive diet and workout plans, proving that <strong>determination and proper guidance can overcome any challenge</strong>.
                     </p>
                     <div class="space-y-4">
                         <div class="flex items-start space-x-4">
                             <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <span class="text-white font-bold text-sm">P</span>
+                                <span class="text-white font-bold text-sm">🏆</span>
                             </div>
                             <div>
-                                <h4 class="text-lg font-semibold text-gray-800 mb-1">Personalized Approach</h4>
-                                <p class="text-gray-600 text-sm">Every program tailored to your unique needs and goals</p>
+                                <h4 class="text-lg font-semibold text-gray-800 mb-1">Specialized Treatments</h4>
+                                <p class="text-gray-600 text-sm">Expert in PCOD, thyroid, diabetes, and natural health transformations</p>
                             </div>
                         </div>
                         <div class="flex items-start space-x-4">
                             <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <span class="text-white font-bold text-sm">R</span>
+                                <span class="text-white font-bold text-sm">💪</span>
                             </div>
                             <div>
-                                <h4 class="text-lg font-semibold text-gray-800 mb-1">Proven Results</h4>
-                                <p class="text-gray-600 text-sm">98% success rate with measurable health improvements</p>
+                                <h4 class="text-lg font-semibold text-gray-800 mb-1">Inspiring Journey</h4>
+                                <p class="text-gray-600 text-sm">Polio survivor who became a successful fitness entrepreneur</p>
                             </div>
                         </div>
                         <div class="flex items-start space-x-4">
-                            <div class="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <span class="text-white font-bold text-sm">H</span>
+                            <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <span class="text-white font-bold text-sm">📈</span>
                             </div>
                             <div>
-                                <h4 class="text-lg font-semibold text-gray-800 mb-1">Holistic Wellness</h4>
-                                <p class="text-gray-600 text-sm">Complete wellness for mind, body, and spirit</p>
+                                <h4 class="text-lg font-semibold text-gray-800 mb-1">Guaranteed Results</h4>
+                                <p class="text-gray-600 text-sm">Comprehensive diet and workout plans with proven success</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- About Image -->
+                <!-- About Image - PHOTO PLACEHOLDER -->
                 <div class="text-center">
                     <div class="bg-white p-8 rounded-xl shadow-lg border-2 border-amber-200">
-                        <div class="w-24 h-24 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <span class="text-white font-bold text-3xl">DA</span>
+                        <!-- Photo Placeholder - Replace with actual photo -->
+                        <div class="profile-photo mx-auto mb-6">
+                            📷
                         </div>
-                        <h3 class="text-2xl font-bold mb-2 text-gray-800">Dr. Anand</h3>
-                        <p class="text-gray-600 mb-6">Certified Wellness Expert</p>
+                        <h3 class="text-2xl font-bold mb-2 text-gray-800">Dr. Anand Gupta</h3>
+                        <p class="text-gray-600 mb-6">Certified Fitness Expert & Nutritionist</p>
                         <div class="grid grid-cols-2 gap-4 text-center">
                             <div>
-                                <div class="text-xl font-bold text-primary-500">500+</div>
+                                <div class="text-xl font-bold text-primary-500">1000+</div>
                                 <div class="text-xs text-gray-600">Clients Helped</div>
                             </div>
                             <div>
-                                <div class="text-xl font-bold text-primary-500">5+</div>
+                                <div class="text-xl font-bold text-primary-500">14+</div>
                                 <div class="text-xs text-gray-600">Years Experience</div>
                             </div>
+                        </div>
+                        <div class="mt-6 pt-6 border-t border-amber-200">
+                            <p class="text-sm text-gray-600 italic">
+                                "Determination and proper guidance can overcome any challenge"
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -551,61 +578,130 @@
         </div>
     </section>
 
-    <!-- Reviews Section -->
+    <!-- Reviews Section - REAL GOOGLE REVIEWS -->
     <section id="reviews" class="py-20 bg-white">
         <div class="max-w-6xl mx-auto px-4">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
                     Real transformations from real people
                 </h2>
+                <p class="text-lg text-gray-600">
+                    Authentic Google reviews from our satisfied clients
+                </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Review 1 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Review 1 - Brandon Pereira -->
                 <div class="testimonial-card">
                     <div class="flex items-center mb-4">
                         <div class="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center">
-                            <span class="text-white font-bold">S</span>
+                            <span class="text-white font-bold">BP</span>
                         </div>
                         <div class="ml-4">
-                            <h4 class="font-semibold text-gray-800">Sarah M.</h4>
-                            <p class="text-gray-600 text-sm">Fat Loss Package Client</p>
+                            <h4 class="font-semibold text-gray-800">Brandon Pereira</h4>
+                            <div class="flex items-center">
+                                <div class="flex text-yellow-400 text-sm">⭐⭐⭐⭐⭐</div>
+                                <span class="text-gray-500 text-xs ml-2">8 months ago</span>
+                            </div>
                         </div>
                     </div>
                     <p class="text-gray-700 text-sm italic">
-                        "The 6-month fat loss program transformed my life completely. Dr. Anand's personalized approach helped me lose 15kg safely and effectively. Highly recommended!"
+                        "Anand Fitness Center is more than just a gym; it's a place where fitness, positivity, and holistic health come together... Sir is not only a fitness expert but also a knowledgeable nutritionist/doctor who guides us with personalized diet plans tailored to our goals."
                     </p>
                 </div>
 
-                <!-- Review 2 -->
+                <!-- Review 2 - Mario Fernandes -->
                 <div class="testimonial-card">
                     <div class="flex items-center mb-4">
                         <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                            <span class="text-white font-bold">R</span>
+                            <span class="text-white font-bold">MF</span>
                         </div>
                         <div class="ml-4">
-                            <h4 class="font-semibold text-gray-800">Raj P.</h4>
-                            <p class="text-gray-600 text-sm">Online Training Client</p>
+                            <h4 class="font-semibold text-gray-800">Mario Fernandes</h4>
+                            <div class="flex items-center">
+                                <div class="flex text-yellow-400 text-sm">⭐⭐⭐⭐⭐</div>
+                                <span class="text-gray-500 text-xs ml-2">2 months ago</span>
+                            </div>
                         </div>
                     </div>
                     <p class="text-gray-700 text-sm italic">
-                        "The online training program was fantastic! Even from home, I got excellent guidance and my energy levels are amazing now. The 6-month support was invaluable."
+                        "Been training with Anand Sir for a while now and honestly, it's been a game-changer. Super motivating, always focused on form, and really knows how to push just the right amount. Every session feels like progress — highly recommend if you're serious about your fitness goals!"
                     </p>
                 </div>
 
-                <!-- Review 3 -->
+                <!-- Review 3 - Satyen Gawade -->
                 <div class="testimonial-card">
                     <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
-                            <span class="text-white font-bold">A</span>
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold">SG</span>
                         </div>
                         <div class="ml-4">
-                            <h4 class="font-semibold text-gray-800">Amit K.</h4>
-                            <p class="text-gray-600 text-sm">Health & Pain Relief Client</p>
+                            <h4 class="font-semibold text-gray-800">Satyen Gawade</h4>
+                            <div class="flex items-center">
+                                <div class="flex text-yellow-400 text-sm">⭐⭐⭐⭐⭐</div>
+                                <span class="text-gray-500 text-xs ml-2">3 months ago</span>
+                            </div>
                         </div>
                     </div>
                     <p class="text-gray-700 text-sm italic">
-                        "The complete health and pain relief package helped me recover from chronic back pain. Professional, caring, and incredibly effective treatment over 6 months."
+                        "This is the best Gym ever that I have joined till now... Anand sir is a magician and he has in-depth knowledge about nutrition and fitness. Anand sirs Gym is well managed and very disciplined, with the team of trained instructors."
+                    </p>
+                </div>
+
+                <!-- Review 4 - Arya Tambe -->
+                <div class="testimonial-card">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold">AT</span>
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="font-semibold text-gray-800">Arya Tambe</h4>
+                            <div class="flex items-center">
+                                <div class="flex text-yellow-400 text-sm">⭐⭐⭐⭐⭐</div>
+                                <span class="text-gray-500 text-xs ml-2">Recent</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm italic">
+                        "I've had a fantastic experience at Dr.Anand's Fitness gym! The trainers are incredibly helpful and knowledgeable, always ready to assist with any questions or concerns. The equipment is top-notch, which makes each workout both effective and enjoyable."
+                    </p>
+                </div>
+
+                <!-- Review 5 - Sharon Saldanha -->
+                <div class="testimonial-card">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold">SS</span>
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="font-semibold text-gray-800">Sharon Saldanha</h4>
+                            <div class="flex items-center">
+                                <div class="flex text-yellow-400 text-sm">⭐⭐⭐⭐⭐</div>
+                                <span class="text-gray-500 text-xs ml-2">1 year ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm italic">
+                        "I've been training with Dr Anand for about four months now and it's been great! The individualized fitness programs he creates are always interesting, challenging and he's been a great motivator too. He also shares an excellent and simple nutrition diet plan."
+                    </p>
+                </div>
+
+                <!-- Review 6 - Nidhi Pradeep -->
+                <div class="testimonial-card">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold">NP</span>
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="font-semibold text-gray-800">Nidhi Pradeep</h4>
+                            <div class="flex items-center">
+                                <div class="flex text-yellow-400 text-sm">⭐⭐⭐⭐⭐</div>
+                                <span class="text-gray-500 text-xs ml-2">5 months ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm italic">
+                        "I've been training at AFA for a little while now, and I can genuinely say I'm already seeing a difference not just physically, but in my overall energy and mindset... He's incredibly knowledgeable and truly invested in helping me hit my goals."
                     </p>
                 </div>
             </div>
@@ -665,7 +761,7 @@
         </div>
     </section>
 
-    <!-- Footer with Real Address and Instagram -->
+    <!-- Footer with Updated Contact Info -->
     <footer class="footer py-16">
         <div class="max-w-6xl mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -686,7 +782,7 @@
                         Professional fitness training, expert nutrition counseling, and holistic healing services for complete wellness transformation.
                     </p>
                     
-                    <!-- Social Media Links -->
+                    <!-- Social Media Links - UPDATED -->
                     <div>
                         <h4 class="font-semibold text-gray-800 mb-4">Follow Us</h4>
                         <div class="flex space-x-4">
@@ -698,19 +794,32 @@
                                 </svg>
                             </a>
                             
-                            <!-- Social Placeholders -->
-                            <a href="#" class="social-icon bg-green-500 opacity-50 cursor-not-allowed">
-                                <span class="text-xs font-bold">WA</span>
+                            <!-- Facebook (Real Link) -->
+                            <a href="https://www.facebook.com/anandsfitnessart" target="_blank" 
+                               class="social-icon bg-blue-600 hover:scale-105 transition-transform">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                </svg>
                             </a>
-                            <a href="#" class="social-icon bg-blue-600 opacity-50 cursor-not-allowed">
-                                <span class="text-xs font-bold">FB</span>
+                            
+                            <!-- YouTube (Real Link) -->
+                            <a href="https://www.youtube.com/@ANANDFITNESSART" target="_blank" 
+                               class="social-icon bg-red-600 hover:scale-105 transition-transform">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                </svg>
                             </a>
-                            <a href="#" class="social-icon bg-red-600 opacity-50 cursor-not-allowed">
-                                <span class="text-xs font-bold">YT</span>
+                            
+                            <!-- WhatsApp -->
+                            <a href="https://wa.me/917039627115" target="_blank" 
+                               class="social-icon bg-green-500 hover:scale-105 transition-transform">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                                </svg>
                             </a>
                         </div>
                         <p class="text-xs text-gray-500 mt-3">
-                            <span class="text-green-500">●</span> Instagram: Active • Others: Coming Soon
+                            <span class="text-green-500">●</span> All Social Media Active
                         </p>
                     </div>
                 </div>
@@ -726,7 +835,7 @@
                     </ul>
                 </div>
 
-                <!-- Contact Info with REAL ADDRESS -->
+                <!-- Contact Info - UPDATED -->
                 <div>
                     <h4 class="font-semibold text-gray-800 mb-4">Contact</h4>
                     <ul class="space-y-2 text-gray-600 text-sm">
@@ -742,7 +851,11 @@
                         </li>
                         <li class="flex items-center pt-2">
                             <span class="text-green-500 mr-2">📞</span>
-                            <a href="tel:+919999999999" class="hover:text-primary-500 transition-colors">+91-99999-99999</a>
+                            <a href="tel:+917039627115" class="hover:text-primary-500 transition-colors">+91 70396 27115</a>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-500 mr-2">💬</span>
+                            <a href="https://wa.me/917039627115" class="hover:text-primary-500 transition-colors">WhatsApp: +91 70396 27115</a>
                         </li>
                         <li class="flex items-center">
                             <span class="text-blue-500 mr-2">📧</span>
@@ -775,7 +888,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <div class="text-gray-600 text-sm mb-4 md:mb-0">
                         <p>&copy; 2025 Dr. Anand's Fitness Art. All rights reserved.</p>
-                        <p class="text-xs mt-1">Fitness, Nutrition & Healing</p>
+                        <p class="text-xs mt-1">Transforming Lives Through Fitness</p>
                     </div>
                     <div class="flex items-center space-x-6 text-gray-600 text-sm">
                         <a href="#" class="hover:text-primary-500 transition-colors">Privacy Policy</a>
