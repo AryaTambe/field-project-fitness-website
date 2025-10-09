@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -10,10 +11,47 @@ const PORT = process.env.PORT || 5000;
 // MongoDB Connection (Optional - falls back to memory storage)
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://fitness:fitness123@cluster0.mongodb.net/dranandfitness?retryWrites=true&w=majority';
 
-// In-memory storage (always works)
-let appointments = [];
-let contacts = [];
+// File paths for persistent memory storage
+const DATA_DIR = path.join(__dirname, 'data');
+const APPOINTMENTS_FILE = path.join(DATA_DIR, 'appointments.json');
+const CONTACTS_FILE = path.join(DATA_DIR, 'contacts.json');
+
+// Ensure data directory exists
+if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+// Helper functions for file operations
+function loadDataFromFile(filePath) {
+    try {
+        if (fs.existsSync(filePath)) {
+            const data = fs.readFileSync(filePath, 'utf8');
+            return JSON.parse(data);
+        }
+        return [];
+    } catch (error) {
+        console.log(`Error loading data from ${filePath}:`, error.message);
+        return [];
+    }
+}
+
+function saveDataToFile(filePath, data) {
+    try {
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        return true;
+    } catch (error) {
+        console.log(`Error saving data to ${filePath}:`, error.message);
+        return false;
+    }
+}
+
+// In-memory storage (now loads from files on startup)
+let appointments = loadDataFromFile(APPOINTMENTS_FILE);
+let contacts = loadDataFromFile(CONTACTS_FILE);
 let isMongoConnected = false;
+
+console.log(`📁 Loaded ${appointments.length} appointments from file storage`);
+console.log(`📁 Loaded ${contacts.length} contacts from file storage`);
 
 // Try MongoDB connection (optional)
 if (MONGODB_URI) {
@@ -26,7 +64,7 @@ if (MONGODB_URI) {
         console.log('✅ MongoDB connected successfully');
         isMongoConnected = true;
     }).catch((err) => {
-        console.log('⚠️ MongoDB connection failed, using in-memory storage');
+        console.log('⚠️ MongoDB connection failed, using persistent memory storage');
         console.log('Error:', err.message);
         isMongoConnected = false;
     });
@@ -62,7 +100,7 @@ try {
         Contact = mongoose.model('Contact', ContactSchema);
     }
 } catch (error) {
-    console.log('Using in-memory models');
+    console.log('Using persistent memory models');
 }
 
 // Middleware
@@ -84,7 +122,7 @@ app.get('/', (req, res) => {
 app.get('/api/health', async (req, res) => {
     let appointmentCount = 0;
     let contactCount = 0;
-    
+
     if (isMongoConnected && Appointment && Contact) {
         try {
             appointmentCount = await Appointment.countDocuments();
@@ -97,12 +135,12 @@ app.get('/api/health', async (req, res) => {
         appointmentCount = appointments.length;
         contactCount = contacts.length;
     }
-    
+
     res.json({ 
         message: 'Dr. Anand\'s Fitness Art is running perfectly!',
         timestamp: new Date().toISOString(),
         database: {
-            status: isMongoConnected ? 'MongoDB Connected' : 'Memory Storage Active',
+            status: isMongoConnected ? 'MongoDB Connected' : 'Persistent Memory Storage Active',
             appointments: appointmentCount,
             contacts: contactCount
         },
@@ -119,10 +157,10 @@ app.get('/admin', async (req, res) => {
     let todayContacts = 0;
     let recentAppointments = [];
     let recentContacts = [];
-    
+
     const today = new Date();
     const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    
+
     if (isMongoConnected && Appointment && Contact) {
         try {
             totalAppointments = await Appointment.countDocuments();
@@ -147,8 +185,8 @@ app.get('/admin', async (req, res) => {
         recentAppointments = appointments.slice(-5).reverse();
         recentContacts = contacts.slice(-5).reverse();
     }
-    
-    const dbStatus = isMongoConnected ? 'MongoDB Connected' : 'Memory Storage';
+
+    const dbStatus = isMongoConnected ? 'MongoDB Connected' : 'Persistent Memory Storage';
 
     res.send(`
         <!DOCTYPE html>
@@ -183,7 +221,7 @@ app.get('/admin', async (req, res) => {
             </style>
         </head>
         <body class="bg-amber-50 text-gray-800 min-h-screen">
-            
+
             <!-- Header -->
             <header class="bg-white border-b-2 border-amber-200 sticky top-0 z-40 shadow-lg">
                 <div class="max-w-7xl mx-auto px-4 py-4">
@@ -211,7 +249,7 @@ app.get('/admin', async (req, res) => {
             </header>
 
             <div class="max-w-7xl mx-auto px-4 py-8">
-                
+
                 <!-- Welcome Banner -->
                 <div class="mb-8">
                     <div class="admin-card ${isMongoConnected ? 'border-green-300 bg-green-50' : 'border-blue-300 bg-blue-50'}">
@@ -223,15 +261,15 @@ app.get('/admin', async (req, res) => {
                                         Admin Dashboard Active ✨
                                     </h3>
                                     <p class="text-sm ${isMongoConnected ? 'text-green-700' : 'text-blue-700'}">
-                                        ${isMongoConnected ? 'MongoDB Database Connected & Operational' : 'Memory Storage Active & Operational'}
+                                        ${isMongoConnected ? 'MongoDB Database Connected & Operational' : 'Persistent Memory Storage Active & Operational - Data Saved to Files!'}
                                     </p>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Quick Actions -->
                 <div class="mb-8">
                     <div class="flex flex-wrap gap-4">
@@ -251,7 +289,7 @@ app.get('/admin', async (req, res) => {
                         </a>
                     </div>
                 </div>
-                
+
                 <!-- Stats -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="admin-card text-center">
@@ -260,21 +298,21 @@ app.get('/admin', async (req, res) => {
                         <div class="text-gray-600 font-medium">Total Appointments</div>
                         <div class="text-xs text-gray-500 mt-1">+${todayAppointments} today</div>
                     </div>
-                    
+
                     <div class="admin-card text-center">
                         <div class="text-4xl mb-2">📈</div>
                         <div class="stat-number">${todayAppointments}</div>
                         <div class="text-gray-600 font-medium">Today's Bookings</div>
                         <div class="text-xs text-gray-500 mt-1">New bookings</div>
                     </div>
-                    
+
                     <div class="admin-card text-center">
                         <div class="text-4xl mb-2">📧</div>
                         <div class="stat-number">${totalContacts}</div>
                         <div class="text-gray-600 font-medium">Total Messages</div>
                         <div class="text-xs text-gray-500 mt-1">+${todayContacts} today</div>
                     </div>
-                    
+
                     <div class="admin-card text-center">
                         <div class="text-4xl mb-2">🚀</div>
                         <div class="stat-number text-green-500">LIVE</div>
@@ -285,11 +323,11 @@ app.get('/admin', async (req, res) => {
 
                 <!-- Data Tables -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    
+
                     <!-- Appointments -->
                     <div class="admin-card">
                         <h2 class="text-lg font-bold text-amber-600 mb-4">
-                            📅 Recent Appointments (${isMongoConnected ? 'MongoDB' : 'Memory'})
+                            📅 Recent Appointments (${isMongoConnected ? 'MongoDB' : 'Persistent Memory'})
                         </h2>
                         <div class="space-y-4 max-h-96 overflow-y-auto">
                             ${recentAppointments.length > 0 ? 
@@ -323,7 +361,7 @@ app.get('/admin', async (req, res) => {
                     <!-- Contacts -->
                     <div class="admin-card">
                         <h2 class="text-lg font-bold text-blue-600 mb-4">
-                            📧 Recent Messages (${isMongoConnected ? 'MongoDB' : 'Memory'})
+                            📧 Recent Messages (${isMongoConnected ? 'MongoDB' : 'Persistent Memory'})
                         </h2>
                         <div class="space-y-4 max-h-96 overflow-y-auto">
                             ${recentContacts.length > 0 ? 
@@ -343,7 +381,7 @@ app.get('/admin', async (req, res) => {
                                     </div>`
                                 ).join('') 
                                 : `<div class="text-center py-8 text-gray-600">
-                                    <div class="text-4xl mb-2">📧</div>
+                                    <div class="text-4xl mb-2">��</div>
                                     <p class="font-medium">No messages yet</p>
                                     <p class="text-sm text-gray-500">Contact form submissions will appear here</p>
                                 </div>`
@@ -357,9 +395,9 @@ app.get('/admin', async (req, res) => {
                     <div class="admin-card">
                         <div class="flex justify-center space-x-8 flex-wrap gap-4 mb-4">
                             <div class="${isMongoConnected ? 'text-green-600' : 'text-blue-600'} font-semibold">
-                                ${isMongoConnected ? '🗄️ MongoDB Atlas Active' : 'Memory Storage Active'}
+                                ${isMongoConnected ? '🗄️ MongoDB Atlas Active' : '📁 Persistent Memory Storage Active'}
                             </div>
-                            
+
                         </div>
                         <p class="text-gray-600 text-sm">
                             Last updated: ${new Date().toLocaleString()} • 
@@ -376,27 +414,27 @@ app.get('/admin', async (req, res) => {
                         const response = await fetch('/api/' + type);
                         const result = await response.json();
                         const data = result.data || [];
-                        
+
                         if (data.length === 0) {
                             alert('No ' + type + ' data to export');
                             return;
                         }
-                        
+
                         let csv = '';
                         if (type === 'appointments') {
-                            csv = 'Name,Email,Phone,Service,Date,Time,Message,Status,Created\\n';
+                            csv = 'Name,Email,Phone,Service,Date,Time,Message,Status,Created\n';
                             data.forEach(item => {
                                 const createdAt = new Date(item.created_at).toLocaleString();
-                                csv += \`"\${item.name}","\${item.email}","\${item.phone}","\${item.service}","\${item.preferred_date || ''}","\${item.preferred_time || ''}","\${item.message}","\${item.status}","\${createdAt}"\\n\`;
+                                csv += '"' + item.name + '","' + item.email + '","' + item.phone + '","' + item.service + '","' + (item.preferred_date || '') + '","' + (item.preferred_time || '') + '","' + item.message + '","' + item.status + '","' + createdAt + '"\n';
                             });
                         } else {
-                            csv = 'Name,Email,Phone,Service,Message,Created\\n';
+                            csv = 'Name,Email,Phone,Service,Message,Created\n';
                             data.forEach(item => {
                                 const createdAt = new Date(item.created_at).toLocaleString();
-                                csv += \`"\${item.name}","\${item.email}","\${item.phone || ''}","\${item.service || ''}","\${item.message}","\${createdAt}"\\n\`;
+                                csv += '"' + item.name + '","' + item.email + '","' + (item.phone || '') + '","' + (item.service || '') + '","' + item.message + '","' + createdAt + '"\n';
                             });
                         }
-                        
+
                         const blob = new Blob([csv], { type: 'text/csv' });
                         const url = window.URL.createObjectURL(blob);
                         const a = document.createElement('a');
@@ -406,13 +444,13 @@ app.get('/admin', async (req, res) => {
                         a.click();
                         document.body.removeChild(a);
                         window.URL.revokeObjectURL(url);
-                        
+
                         alert('✅ Data exported successfully!');
                     } catch (error) {
                         alert('Export failed: ' + error.message);
                     }
                 }
-                
+
                 // Auto refresh every 5 minutes
                 setTimeout(() => {
                     window.location.reload();
@@ -427,25 +465,25 @@ app.get('/admin', async (req, res) => {
 app.get('/api/appointments', async (req, res) => {
     try {
         let appointmentsData = [];
-        
+
         if (isMongoConnected && Appointment) {
             appointmentsData = await Appointment.find().sort({ created_at: -1 });
         } else {
             appointmentsData = [...appointments].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         }
-        
+
         res.json({ 
             success: true, 
             count: appointmentsData.length, 
             data: appointmentsData,
-            source: isMongoConnected ? 'MongoDB' : 'Memory Storage'
+            source: isMongoConnected ? 'MongoDB' : 'Persistent Memory Storage'
         });
     } catch (error) {
         res.json({ 
             success: true, 
             count: appointments.length, 
             data: appointments,
-            source: 'Memory Storage (Fallback)'
+            source: 'Persistent Memory Storage (Fallback)'
         });
     }
 });
@@ -453,7 +491,7 @@ app.get('/api/appointments', async (req, res) => {
 app.post('/api/appointments', async (req, res) => {
     try {
         const { name, email, phone, service, date, time, message } = req.body;
-        
+
         if (!name || !email || !phone) {
             return res.status(400).json({
                 success: false,
@@ -473,13 +511,13 @@ app.post('/api/appointments', async (req, res) => {
             created_at: new Date()
         };
 
-        // Try MongoDB first, fallback to memory
+        // Try MongoDB first, fallback to persistent memory
         if (isMongoConnected && Appointment) {
             try {
                 const appointment = new Appointment(appointmentData);
                 await appointment.save();
                 console.log('✅ Appointment saved to MongoDB:', appointment.name);
-                
+
                 res.status(201).json({
                     success: true,
                     message: 'Appointment booked successfully! We\'ll contact you soon.',
@@ -487,25 +525,28 @@ app.post('/api/appointments', async (req, res) => {
                 });
                 return;
             } catch (mongoError) {
-                console.log('MongoDB save failed, using memory fallback');
+                console.log('MongoDB save failed, using persistent memory fallback');
             }
         }
-        
-        // Fallback to memory storage
+
+        // Fallback to persistent memory storage
         const appointment = {
             ...appointmentData,
             id: Date.now(),
             created_at: appointmentData.created_at.toISOString()
         };
         appointments.push(appointment);
-        console.log('✅ Appointment saved to memory:', appointment.name);
+
+        // Save to file immediately
+        saveDataToFile(APPOINTMENTS_FILE, appointments);
+        console.log('✅ Appointment saved to persistent memory:', appointment.name);
 
         res.status(201).json({
             success: true,
             message: 'Appointment booked successfully! We\'ll contact you soon.',
-            source: 'Memory Storage'
+            source: 'Persistent Memory Storage'
         });
-        
+
     } catch (error) {
         console.error('Save appointment error:', error);
         res.status(500).json({ success: false, message: 'Booking error. Please try again.' });
@@ -515,7 +556,7 @@ app.post('/api/appointments', async (req, res) => {
 app.post('/api/contact', async (req, res) => {
     try {
         const { name, email, phone, service, message } = req.body;
-        
+
         if (!name || !email || !message) {
             return res.status(400).json({
                 success: false,
@@ -532,13 +573,13 @@ app.post('/api/contact', async (req, res) => {
             created_at: new Date()
         };
 
-        // Try MongoDB first, fallback to memory
+        // Try MongoDB first, fallback to persistent memory
         if (isMongoConnected && Contact) {
             try {
                 const contact = new Contact(contactData);
                 await contact.save();
                 console.log('✅ Contact saved to MongoDB:', contact.name);
-                
+
                 res.json({
                     success: true,
                     message: 'Thank you for your message! We\'ll get back to you within 24 hours.',
@@ -546,25 +587,28 @@ app.post('/api/contact', async (req, res) => {
                 });
                 return;
             } catch (mongoError) {
-                console.log('MongoDB save failed, using memory fallback');
+                console.log('MongoDB save failed, using persistent memory fallback');
             }
         }
-        
-        // Fallback to memory storage
+
+        // Fallback to persistent memory storage
         const contact = {
             ...contactData,
             id: Date.now(),
             created_at: contactData.created_at.toISOString()
         };
         contacts.push(contact);
-        console.log('✅ Contact saved to memory:', contact.name);
+
+        // Save to file immediately
+        saveDataToFile(CONTACTS_FILE, contacts);
+        console.log('✅ Contact saved to persistent memory:', contact.name);
 
         res.json({
             success: true,
             message: 'Thank you for your message! We\'ll get back to you within 24 hours.',
-            source: 'Memory Storage'
+            source: 'Persistent Memory Storage'
         });
-        
+
     } catch (error) {
         console.error('Save contact error:', error);
         res.status(500).json({ success: false, message: 'Contact error. Please try again.' });
@@ -574,25 +618,25 @@ app.post('/api/contact', async (req, res) => {
 app.get('/api/contacts', async (req, res) => {
     try {
         let contactsData = [];
-        
+
         if (isMongoConnected && Contact) {
             contactsData = await Contact.find().sort({ created_at: -1 });
         } else {
             contactsData = [...contacts].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         }
-        
+
         res.json({ 
             success: true, 
             count: contactsData.length, 
             data: contactsData,
-            source: isMongoConnected ? 'MongoDB' : 'Memory Storage'
+            source: isMongoConnected ? 'MongoDB' : 'Persistent Memory Storage'
         });
     } catch (error) {
         res.json({ 
             success: true, 
             count: contacts.length, 
             data: contacts,
-            source: 'Memory Storage (Fallback)'
+            source: 'Persistent Memory Storage (Fallback)'
         });
     }
 });
@@ -605,6 +649,6 @@ app.listen(PORT, () => {
     console.log('🚀 =======================================');
     console.log('🎨 Theme: Yellow & White Professional');
     console.log('🔓 Admin Access: Direct URL (No Login)');
-    console.log(`🗄️ Database: ${isMongoConnected ? 'MongoDB Connected' : 'Memory Storage Active'}`);
+    console.log(`🗄️ Database: ${isMongoConnected ? 'MongoDB Connected' : 'Persistent Memory Storage Active'}`);
     console.log('🚀 =======================================');
 });
