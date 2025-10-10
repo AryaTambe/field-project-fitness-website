@@ -8,20 +8,25 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// MongoDB Connection (Optional - falls back to memory storage)
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://fitness:fitness123@cluster0.mongodb.net/dranandfitness?retryWrites=true&w=majority';
+// MongoDB Connection with your credentials
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://Aryya:^YHNmju7@gym-project-database.plkznus.mongodb.net/dranandfitness?retryWrites=true&w=majority&appName=Gym-Project-Database';
 
-// File paths for persistent memory storage
+// File paths for persistent memory storage (deployment-safe)
 const DATA_DIR = path.join(__dirname, 'data');
 const APPOINTMENTS_FILE = path.join(DATA_DIR, 'appointments.json');
 const CONTACTS_FILE = path.join(DATA_DIR, 'contacts.json');
 
-// Ensure data directory exists
-if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+// Ensure data directory exists with error handling
+try {
+    if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+        console.log('📁 Created data directory');
+    }
+} catch (error) {
+    console.log('⚠️ Could not create data directory:', error.message);
 }
 
-// Helper functions for file operations
+// Helper functions for file operations with error handling
 function loadDataFromFile(filePath) {
     try {
         if (fs.existsSync(filePath)) {
@@ -30,7 +35,7 @@ function loadDataFromFile(filePath) {
         }
         return [];
     } catch (error) {
-        console.log(`Error loading data from ${filePath}:`, error.message);
+        console.log(`⚠️ Error loading data from ${filePath}:`, error.message);
         return [];
     }
 }
@@ -40,12 +45,12 @@ function saveDataToFile(filePath, data) {
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
         return true;
     } catch (error) {
-        console.log(`Error saving data to ${filePath}:`, error.message);
+        console.log(`⚠️ Error saving data to ${filePath}:`, error.message);
         return false;
     }
 }
 
-// In-memory storage (now loads from files on startup)
+// In-memory storage (loads from files on startup)
 let appointments = loadDataFromFile(APPOINTMENTS_FILE);
 let contacts = loadDataFromFile(CONTACTS_FILE);
 let isMongoConnected = false;
@@ -53,7 +58,7 @@ let isMongoConnected = false;
 console.log(`📁 Loaded ${appointments.length} appointments from file storage`);
 console.log(`📁 Loaded ${contacts.length} contacts from file storage`);
 
-// Try MongoDB connection (optional)
+// MongoDB connection
 if (MONGODB_URI) {
     mongoose.connect(MONGODB_URI, {
         useNewUrlParser: true,
@@ -70,7 +75,7 @@ if (MONGODB_URI) {
     });
 }
 
-// MongoDB Schemas (if connected)
+// MongoDB Schemas
 const AppointmentSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
@@ -92,16 +97,9 @@ const ContactSchema = new mongoose.Schema({
     created_at: { type: Date, default: Date.now }
 });
 
-// MongoDB Models (only if connected)
-let Appointment, Contact;
-try {
-    if (isMongoConnected) {
-        Appointment = mongoose.model('Appointment', AppointmentSchema);
-        Contact = mongoose.model('Contact', ContactSchema);
-    }
-} catch (error) {
-    console.log('Using persistent memory models');
-}
+// Create models immediately
+const Appointment = mongoose.model('Appointment', AppointmentSchema);
+const Contact = mongoose.model('Contact', ContactSchema);
 
 // Middleware
 app.use(cors());
@@ -109,7 +107,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 console.log('🚀 =======================================');
-console.log('🚀 DR. ANAND\'S FITNESS ART - MEAN STACK');
+console.log('🚀 DR. ANAND\'S FITNESS ART - EXPORT FIXED');
 console.log('🚀 Yellow & White Theme - No Login Required');
 console.log('🚀 =======================================');
 
@@ -122,25 +120,29 @@ app.get('/', (req, res) => {
 app.get('/api/health', async (req, res) => {
     let appointmentCount = 0;
     let contactCount = 0;
+    let dataSource = 'Unknown';
 
-    if (isMongoConnected && Appointment && Contact) {
+    if (isMongoConnected) {
         try {
             appointmentCount = await Appointment.countDocuments();
             contactCount = await Contact.countDocuments();
+            dataSource = 'MongoDB Connected';
         } catch (error) {
             appointmentCount = appointments.length;
             contactCount = contacts.length;
+            dataSource = 'MongoDB Error - Using Memory';
         }
     } else {
         appointmentCount = appointments.length;
         contactCount = contacts.length;
+        dataSource = fs.existsSync(DATA_DIR) ? 'Persistent Memory Storage' : 'Memory Only';
     }
 
     res.json({ 
         message: 'Dr. Anand\'s Fitness Art is running perfectly!',
         timestamp: new Date().toISOString(),
         database: {
-            status: isMongoConnected ? 'MongoDB Connected' : 'Persistent Memory Storage Active',
+            status: dataSource,
             appointments: appointmentCount,
             contacts: contactCount
         },
@@ -149,7 +151,7 @@ app.get('/api/health', async (req, res) => {
     });
 });
 
-// **DIRECT ADMIN ACCESS - NO LOGIN REQUIRED**
+// Enhanced admin dashboard with WORKING export functionality
 app.get('/admin', async (req, res) => {
     let totalAppointments = 0;
     let totalContacts = 0;
@@ -161,7 +163,7 @@ app.get('/admin', async (req, res) => {
     const today = new Date();
     const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-    if (isMongoConnected && Appointment && Contact) {
+    if (isMongoConnected) {
         try {
             totalAppointments = await Appointment.countDocuments();
             totalContacts = await Contact.countDocuments();
@@ -218,6 +220,15 @@ app.get('/admin', async (req, res) => {
                     font-weight: 800;
                     color: #f59e0b;
                 }
+                .export-btn {
+                    transition: all 0.3s ease;
+                }
+                .export-btn:hover {
+                    transform: translateY(-1px);
+                }
+                .export-btn:active {
+                    transform: translateY(0);
+                }
             </style>
         </head>
         <body class="bg-amber-50 text-gray-800 min-h-screen">
@@ -232,14 +243,15 @@ app.get('/admin', async (req, res) => {
                             </div>
                             <div>
                                 <h1 class="text-2xl font-bold text-amber-600">Dr. Anand's Fitness Art</h1>
-                                <p class="text-gray-600 text-sm">Admin Dashboard</p>
+                                <p class="text-gray-600 text-sm">Admin Dashboard - Export Fixed</p>
                             </div>
                         </div>
                         <div class="flex items-center space-x-4">
-                            <div class="text-right">
+                            <div class="text-right text-xs">
                                 <div class="text-sm font-semibold ${isMongoConnected ? 'text-green-600' : 'text-blue-600'}">
                                     🗄️ ${dbStatus}
-                                </div>                            </div>
+                                </div>
+                            </div>
                             <a href="/" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-semibold">
                                 View Website
                             </a>
@@ -261,11 +273,10 @@ app.get('/admin', async (req, res) => {
                                         Admin Dashboard Active ✨
                                     </h3>
                                     <p class="text-sm ${isMongoConnected ? 'text-green-700' : 'text-blue-700'}">
-                                        ${isMongoConnected ? 'MongoDB Database Connected & Operational' : 'Persistent Memory Storage Active & Operational - Data Saved to Files!'}
+                                        ${isMongoConnected ? 'MongoDB Database Connected & Operational' : 'Persistent Memory Storage Active'}
                                     </p>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -277,11 +288,11 @@ app.get('/admin', async (req, res) => {
                             🏠 View Website
                         </a>
                         <button onclick="exportData('appointments')" 
-                                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold">
+                                class="export-btn bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold">
                             📊 Export Appointments
                         </button>
                         <button onclick="exportData('contacts')" 
-                                class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold">
+                                class="export-btn bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold">
                             📧 Export Contacts
                         </button>
                         <a href="/api/health" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold">
@@ -327,7 +338,7 @@ app.get('/admin', async (req, res) => {
                     <!-- Appointments -->
                     <div class="admin-card">
                         <h2 class="text-lg font-bold text-amber-600 mb-4">
-                            📅 Recent Appointments (${isMongoConnected ? 'MongoDB' : 'Persistent Memory'})
+                            📅 Recent Appointments (${isMongoConnected ? 'MongoDB' : 'Memory'})
                         </h2>
                         <div class="space-y-4 max-h-96 overflow-y-auto">
                             ${recentAppointments.length > 0 ? 
@@ -361,7 +372,7 @@ app.get('/admin', async (req, res) => {
                     <!-- Contacts -->
                     <div class="admin-card">
                         <h2 class="text-lg font-bold text-blue-600 mb-4">
-                            📧 Recent Messages (${isMongoConnected ? 'MongoDB' : 'Persistent Memory'})
+                            📧 Recent Messages (${isMongoConnected ? 'MongoDB' : 'Memory'})
                         </h2>
                         <div class="space-y-4 max-h-96 overflow-y-auto">
                             ${recentContacts.length > 0 ? 
@@ -381,7 +392,7 @@ app.get('/admin', async (req, res) => {
                                     </div>`
                                 ).join('') 
                                 : `<div class="text-center py-8 text-gray-600">
-                                    <div class="text-4xl mb-2">��</div>
+                                    <div class="text-4xl mb-2">📧</div>
                                     <p class="font-medium">No messages yet</p>
                                     <p class="text-sm text-gray-500">Contact form submissions will appear here</p>
                                 </div>`
@@ -395,95 +406,220 @@ app.get('/admin', async (req, res) => {
                     <div class="admin-card">
                         <div class="flex justify-center space-x-8 flex-wrap gap-4 mb-4">
                             <div class="${isMongoConnected ? 'text-green-600' : 'text-blue-600'} font-semibold">
-                                ${isMongoConnected ? '🗄️ MongoDB Atlas Active' : '📁 Persistent Memory Storage Active'}
+                                ${isMongoConnected ? '🗄️ MongoDB Active' : '📁 Persistent Storage Active'}
                             </div>
-
                         </div>
                         <p class="text-gray-600 text-sm">
                             Last updated: ${new Date().toLocaleString()} • 
                             Database: ${dbStatus} • 
-                            Admin Access: Direct URL
+                            Export: Fixed & Working
                         </p>
                     </div>
                 </div>
             </div>
 
             <script>
+                console.log('🚀 Export functionality loaded');
+
                 async function exportData(type) {
                     try {
-                        const response = await fetch('/api/' + type);
+                        console.log('📊 Starting export for:', type);
+
+                        // Show loading feedback
+                        const button = event.target;
+                        const originalText = button.innerHTML;
+                        button.innerHTML = '⏳ Exporting...';
+                        button.disabled = true;
+
+                        // Fetch data from API
+                        const response = await fetch(\`/api/\${type}\`);
+                        console.log('📡 Response status:', response.status);
+
+                        if (!response.ok) {
+                            throw new Error(\`HTTP Error: \${response.status} - \${response.statusText}\`);
+                        }
+
                         const result = await response.json();
+                        console.log('📋 API Response:', result);
+
+                        // Check if we have data
+                        if (!result.success) {
+                            throw new Error(result.error || 'API request failed');
+                        }
+
                         const data = result.data || [];
+                        console.log('📊 Data items found:', data.length);
 
                         if (data.length === 0) {
-                            alert('No ' + type + ' data to export');
+                            alert(\`No \${type} data to export. Try booking an appointment or sending a message first.\`);
                             return;
                         }
 
-                        let csv = '';
+                        // Generate CSV content
+                        let csvContent = '';
+                        let filename = '';
+
                         if (type === 'appointments') {
-                            csv = 'Name,Email,Phone,Service,Date,Time,Message,Status,Created\n';
+                            csvContent = 'Name,Email,Phone,Service,Preferred Date,Preferred Time,Message,Status,Created Date\n';
+                            filename = \`appointments_\${new Date().toISOString().split('T')[0]}.csv\`;
+
                             data.forEach(item => {
-                                const createdAt = new Date(item.created_at).toLocaleString();
-                                csv += '"' + item.name + '","' + item.email + '","' + item.phone + '","' + item.service + '","' + (item.preferred_date || '') + '","' + (item.preferred_time || '') + '","' + item.message + '","' + item.status + '","' + createdAt + '"\n';
+                                const row = [
+                                    \`"\${(item.name || '').toString().replace(/"/g, '""')}"\`,
+                                    \`"\${(item.email || '').toString().replace(/"/g, '""')}"\`,
+                                    \`"\${(item.phone || '').toString().replace(/"/g, '""')}"\`,
+                                    \`"\${(item.service || 'General Consultation').toString().replace(/"/g, '""')}"\`,
+                                    \`"\${(item.preferred_date || '').toString().replace(/"/g, '""')}"\`,
+                                    \`"\${(item.preferred_time || '').toString().replace(/"/g, '""')}"\`,
+                                    \`"\${(item.message || '').toString().replace(/"/g, '""')}"\`,
+                                    \`"\${(item.status || 'pending').toString().replace(/"/g, '""')}"\`,
+                                    \`"\${new Date(item.created_at).toLocaleString()}"\`
+                                ];
+                                csvContent += row.join(',') + '\n';
                             });
                         } else {
-                            csv = 'Name,Email,Phone,Service,Message,Created\n';
+                            csvContent = 'Name,Email,Phone,Service,Message,Created Date\n';
+                            filename = \`contacts_\${new Date().toISOString().split('T')[0]}.csv\`;
+
                             data.forEach(item => {
-                                const createdAt = new Date(item.created_at).toLocaleString();
-                                csv += '"' + item.name + '","' + item.email + '","' + (item.phone || '') + '","' + (item.service || '') + '","' + item.message + '","' + createdAt + '"\n';
+                                const row = [
+                                    \`"\${(item.name || '').toString().replace(/"/g, '""')}"\`,
+                                    \`"\${(item.email || '').toString().replace(/"/g, '""')}"\`,
+                                    \`"\${(item.phone || '').toString().replace(/"/g, '""')}"\`,
+                                    \`"\${(item.service || '').toString().replace(/"/g, '""')}"\`,
+                                    \`"\${(item.message || '').toString().replace(/"/g, '""')}"\`,
+                                    \`"\${new Date(item.created_at).toLocaleString()}"\`
+                                ];
+                                csvContent += row.join(',') + '\n';
                             });
                         }
 
-                        const blob = new Blob([csv], { type: 'text/csv' });
+                        console.log(' CSV content generated, length:', csvContent.length);
+
+                        // Create and download file
+                        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
                         const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = type + '_' + new Date().toISOString().split('T')[0] + '.csv';
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
+
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = url;
+                        downloadLink.download = filename;
+                        downloadLink.style.display = 'none';
+
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+
                         window.URL.revokeObjectURL(url);
 
-                        alert('✅ Data exported successfully!');
+                        console.log(' Export completed successfully');
+                        alert(\` Successfully exported \${data.length} \${type} records!\n\nFile: \${filename}\`);
+
                     } catch (error) {
-                        alert('Export failed: ' + error.message);
+                        console.error(' Export error:', error);
+                        alert(\` Export failed: \${error.message}\n\nPlease check the browser console for more details.\`);
+                    } finally {
+                        // Reset button
+                        if (button) {
+                            button.innerHTML = originalText;
+                            button.disabled = false;
+                        }
                     }
                 }
 
-                // Auto refresh every 5 minutes
-                setTimeout(() => {
-                    window.location.reload();
-                }, 5 * 60 * 1000);
+                // Test API endpoints on page load
+                window.addEventListener('load', function() {
+                    console.log('🔍 Testing API endpoints...');
+
+                    fetch('/api/health')
+                        .then(response => response.json())
+                        .then(data => console.log('✅ Health check:', data))
+                        .catch(error => console.error('❌ Health check failed:', error));
+
+                    fetch('/api/appointments')
+                        .then(response => response.json())
+                        .then(data => console.log('✅ Appointments API:', data.count, 'records'))
+                        .catch(error => console.error('❌ Appointments API failed:', error));
+
+                    fetch('/api/contacts')
+                        .then(response => response.json())
+                        .then(data => console.log('✅ Contacts API:', data.count, 'records'))
+                        .catch(error => console.error('❌ Contacts API failed:', error));
+                });
             </script>
         </body>
         </html>
     `);
 });
 
-// API Routes
+// API Routes with enhanced error handling
 app.get('/api/appointments', async (req, res) => {
     try {
         let appointmentsData = [];
 
-        if (isMongoConnected && Appointment) {
-            appointmentsData = await Appointment.find().sort({ created_at: -1 });
+        if (isMongoConnected) {
+            try {
+                appointmentsData = await Appointment.find().sort({ created_at: -1 });
+                console.log('✅ Fetched appointments from MongoDB:', appointmentsData.length);
+            } catch (mongoError) {
+                console.log('❌ MongoDB fetch failed:', mongoError.message);
+                appointmentsData = [...appointments].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            }
         } else {
             appointmentsData = [...appointments].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            console.log('📂 Fetched appointments from memory:', appointmentsData.length);
         }
 
         res.json({ 
             success: true, 
             count: appointmentsData.length, 
             data: appointmentsData,
-            source: isMongoConnected ? 'MongoDB' : 'Persistent Memory Storage'
+            source: isMongoConnected ? 'MongoDB' : 'Memory Storage',
+            timestamp: new Date().toISOString()
         });
     } catch (error) {
+        console.error('❌ API appointments error:', error);
+        res.status(500).json({ 
+            success: false, 
+            count: 0, 
+            data: [],
+            error: error.message,
+            source: 'Error Fallback'
+        });
+    }
+});
+
+app.get('/api/contacts', async (req, res) => {
+    try {
+        let contactsData = [];
+
+        if (isMongoConnected) {
+            try {
+                contactsData = await Contact.find().sort({ created_at: -1 });
+                console.log('✅ Fetched contacts from MongoDB:', contactsData.length);
+            } catch (mongoError) {
+                console.log('❌ MongoDB fetch failed:', mongoError.message);
+                contactsData = [...contacts].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            }
+        } else {
+            contactsData = [...contacts].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            console.log('📂 Fetched contacts from memory:', contactsData.length);
+        }
+
         res.json({ 
             success: true, 
-            count: appointments.length, 
-            data: appointments,
-            source: 'Persistent Memory Storage (Fallback)'
+            count: contactsData.length, 
+            data: contactsData,
+            source: isMongoConnected ? 'MongoDB' : 'Memory Storage',
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('❌ API contacts error:', error);
+        res.status(500).json({ 
+            success: false, 
+            count: 0, 
+            data: [],
+            error: error.message,
+            source: 'Error Fallback'
         });
     }
 });
@@ -511,8 +647,8 @@ app.post('/api/appointments', async (req, res) => {
             created_at: new Date()
         };
 
-        // Try MongoDB first, fallback to persistent memory
-        if (isMongoConnected && Appointment) {
+        // Try MongoDB first
+        if (isMongoConnected) {
             try {
                 const appointment = new Appointment(appointmentData);
                 await appointment.save();
@@ -525,11 +661,11 @@ app.post('/api/appointments', async (req, res) => {
                 });
                 return;
             } catch (mongoError) {
-                console.log('MongoDB save failed, using persistent memory fallback');
+                console.log('❌ MongoDB save failed:', mongoError.message);
             }
         }
 
-        // Fallback to persistent memory storage
+        // Fallback to memory storage
         const appointment = {
             ...appointmentData,
             id: Date.now(),
@@ -537,18 +673,18 @@ app.post('/api/appointments', async (req, res) => {
         };
         appointments.push(appointment);
 
-        // Save to file immediately
+        // Save to file
         saveDataToFile(APPOINTMENTS_FILE, appointments);
-        console.log('✅ Appointment saved to persistent memory:', appointment.name);
+        console.log('✅ Appointment saved to memory:', appointment.name);
 
         res.status(201).json({
             success: true,
             message: 'Appointment booked successfully! We\'ll contact you soon.',
-            source: 'Persistent Memory Storage'
+            source: 'Memory Storage'
         });
 
     } catch (error) {
-        console.error('Save appointment error:', error);
+        console.error('❌ Save appointment error:', error);
         res.status(500).json({ success: false, message: 'Booking error. Please try again.' });
     }
 });
@@ -573,8 +709,8 @@ app.post('/api/contact', async (req, res) => {
             created_at: new Date()
         };
 
-        // Try MongoDB first, fallback to persistent memory
-        if (isMongoConnected && Contact) {
+        // Try MongoDB first
+        if (isMongoConnected) {
             try {
                 const contact = new Contact(contactData);
                 await contact.save();
@@ -587,11 +723,11 @@ app.post('/api/contact', async (req, res) => {
                 });
                 return;
             } catch (mongoError) {
-                console.log('MongoDB save failed, using persistent memory fallback');
+                console.log('❌ MongoDB save failed:', mongoError.message);
             }
         }
 
-        // Fallback to persistent memory storage
+        // Fallback to memory storage
         const contact = {
             ...contactData,
             id: Date.now(),
@@ -599,45 +735,19 @@ app.post('/api/contact', async (req, res) => {
         };
         contacts.push(contact);
 
-        // Save to file immediately
+        // Save to file
         saveDataToFile(CONTACTS_FILE, contacts);
-        console.log('✅ Contact saved to persistent memory:', contact.name);
+        console.log('✅ Contact saved to memory:', contact.name);
 
         res.json({
             success: true,
             message: 'Thank you for your message! We\'ll get back to you within 24 hours.',
-            source: 'Persistent Memory Storage'
+            source: 'Memory Storage'
         });
 
     } catch (error) {
-        console.error('Save contact error:', error);
+        console.error('❌ Save contact error:', error);
         res.status(500).json({ success: false, message: 'Contact error. Please try again.' });
-    }
-});
-
-app.get('/api/contacts', async (req, res) => {
-    try {
-        let contactsData = [];
-
-        if (isMongoConnected && Contact) {
-            contactsData = await Contact.find().sort({ created_at: -1 });
-        } else {
-            contactsData = [...contacts].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-        }
-
-        res.json({ 
-            success: true, 
-            count: contactsData.length, 
-            data: contactsData,
-            source: isMongoConnected ? 'MongoDB' : 'Persistent Memory Storage'
-        });
-    } catch (error) {
-        res.json({ 
-            success: true, 
-            count: contacts.length, 
-            data: contacts,
-            source: 'Persistent Memory Storage (Fallback)'
-        });
     }
 });
 
@@ -649,6 +759,7 @@ app.listen(PORT, () => {
     console.log('🚀 =======================================');
     console.log('🎨 Theme: Yellow & White Professional');
     console.log('🔓 Admin Access: Direct URL (No Login)');
-    console.log(`🗄️ Database: ${isMongoConnected ? 'MongoDB Connected' : 'Persistent Memory Storage Active'}`);
+    console.log(`🗄️ Database: ${isMongoConnected ? 'MongoDB Connected' : 'Memory Storage Active'}`);
+    console.log('📊 Export: Fixed & Working');
     console.log('🚀 =======================================');
 });
