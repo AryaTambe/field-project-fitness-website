@@ -1,129 +1,125 @@
- const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+// MongoDB Database Configuration for Dr. Anand's Fitness Art
+// This file is kept for compatibility but main database logic is in server.js
 
-const DB_PATH = path.join(__dirname, 'fitness_art.db');
+const mongoose = require('mongoose');
 
-const db = new sqlite3.Database(DB_PATH, (err) => {
-    if (err) {
-        console.error('❌ Error opening database:', err.message);
-    } else {
-        console.log('✅ Connected to SQLite database');
+// MongoDB Connection URI
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://Aryya:^YHNmju7@gym-project-database.plkznus.mongodb.net/dranandfitness?retryWrites=true&w=majority&appName=Gym-Project-Database';
+
+let isConnected = false;
+
+// Initialize MongoDB Connection
+async function initDatabase() {
+    try {
+        if (isConnected) {
+            console.log('✅ MongoDB already connected');
+            return { success: true, message: 'Already connected' };
+        }
+
+        await mongoose.connect(MONGODB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            serverSelectionTimeoutMS: 5000,
+            socketTimeoutMS: 45000,
+        });
+
+        isConnected = true;
+        console.log('✅ MongoDB connected successfully');
+
+        return { success: true, message: 'MongoDB connected successfully' };
+
+    } catch (error) {
+        console.error('❌ MongoDB connection failed:', error.message);
+        isConnected = false;
+        return { success: false, message: 'MongoDB connection failed', error: error.message };
     }
+}
+
+// MongoDB Schemas
+const AppointmentSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    service: { type: String, default: 'Basic Consultation' },
+    preferred_date: { type: String, default: null },
+    preferred_time: { type: String, default: null },
+    message: { type: String, default: '' },
+    status: { type: String, default: 'pending' },
+    payment_status: { type: String, default: 'not_required' },
+    payment_id: { type: String, default: null },
+    razorpay_order_id: { type: String, default: null },
+    razorpay_payment_id: { type: String, default: null },
+    amount: { type: Number, default: 0 },
+    created_at: { type: Date, default: Date.now }
 });
 
-function initDatabase() {
-    return new Promise((resolve, reject) => {
-        db.serialize(() => {
-            // Appointments table
-            db.run(`
-                CREATE TABLE IF NOT EXISTS appointments (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL,
-                    email TEXT NOT NULL,
-                    phone TEXT NOT NULL,
-                    service TEXT,
-                    preferred_date TEXT,
-                    preferred_time TEXT,
-                    message TEXT,
-                    status TEXT DEFAULT 'pending',
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-                )
-            `, (err) => {
-                if (err) reject(err);
-                else console.log('✅ Appointments table ready');
-            });
+const ContactSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, default: null },
+    service: { type: String, default: null },
+    message: { type: String, required: true },
+    created_at: { type: Date, default: Date.now }
+});
 
-            // Contacts table
-            db.run(`
-                CREATE TABLE IF NOT EXISTS contacts (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL,
-                    email TEXT NOT NULL,
-                    phone TEXT,
-                    service TEXT,
-                    message TEXT NOT NULL,
-                    status TEXT DEFAULT 'new',
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-                )
-            `, (err) => {
-                if (err) reject(err);
-                else console.log('✅ Contacts table ready');
-            });
+const PaymentSchema = new mongoose.Schema({
+    razorpay_order_id: { type: String, required: true },
+    razorpay_payment_id: { type: String, required: true },
+    razorpay_signature: { type: String, required: true },
+    amount: { type: Number, required: true },
+    currency: { type: String, default: 'INR' },
+    status: { type: String, default: 'success' },
+    customer_name: { type: String, required: true },
+    customer_email: { type: String, required: true },
+    customer_phone: { type: String, required: true },
+    service: { type: String, required: true },
+    created_at: { type: Date, default: Date.now }
+});
 
-            // Services table
-            db.run(`
-                CREATE TABLE IF NOT EXISTS services (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL,
-                    description TEXT,
-                    features TEXT,
-                    price TEXT,
-                    duration TEXT,
-                    active INTEGER DEFAULT 1,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-                )
-            `, (err) => {
-                if (err) reject(err);
-                else {
-                    console.log('✅ Services table ready');
-                    insertDefaultServices();
-                }
-            });
+// Create Models
+let Appointment, Contact, Payment;
 
-            resolve();
-        });
-    });
+try {
+    Appointment = mongoose.model('Appointment', AppointmentSchema);
+    Contact = mongoose.model('Contact', ContactSchema);
+    Payment = mongoose.model('Payment', PaymentSchema);
+    console.log('✅ MongoDB models created successfully');
+} catch (error) {
+    console.error('❌ Error creating models:', error.message);
 }
 
-function insertDefaultServices() {
-    const defaultServices = [
-        {
-            name: 'Personal Training',
-            description: 'One-on-one customized fitness programs tailored to your goals',
-            features: JSON.stringify(['Custom workouts', 'Progress tracking', 'Nutrition guidance']),
-            price: '₹2000/session',
-            duration: '60 minutes'
-        },
-        {
-            name: 'Group Classes',
-            description: 'Energetic group fitness sessions for motivation and community',
-            features: JSON.stringify(['Variety of classes', 'Expert instructors', 'Community support']),
-            price: '₹800/session',
-            duration: '45 minutes'
-        },
-        {
-            name: 'Nutrition Counseling',
-            description: 'Professional dietary guidance for optimal health',
-            features: JSON.stringify(['Meal planning', 'Diet assessment', 'Lifestyle coaching']),
-            price: '₹1500/session',
-            duration: '45 minutes'
-        },
-        {
-            name: 'Rehabilitation',
-            description: 'Recovery programs for injuries and therapy needs',
-            features: JSON.stringify(['Injury recovery', 'Physical therapy', 'Pain management']),
-            price: '₹2500/session',
-            duration: '60 minutes'
-        }
-    ];
-
-    db.get("SELECT COUNT(*) as count FROM services", (err, row) => {
-        if (!err && row.count === 0) {
-            const stmt = db.prepare(`
-                INSERT INTO services (name, description, features, price, duration)
-                VALUES (?, ?, ?, ?, ?)
-            `);
-
-            defaultServices.forEach(service => {
-                stmt.run([service.name, service.description, service.features, service.price, service.duration]);
-            });
-
-            stmt.finalize();
-            console.log('✅ Default services inserted');
-        }
-    });
+// Get connection status
+function getConnectionStatus() {
+    return {
+        isConnected: isConnected,
+        readyState: mongoose.connection.readyState,
+        status: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
+    };
 }
 
-module.exports = { db, initDatabase };
+// Close connection
+async function closeDatabase() {
+    try {
+        if (isConnected) {
+            await mongoose.connection.close();
+            isConnected = false;
+            console.log('✅ MongoDB connection closed');
+        }
+    } catch (error) {
+        console.error('❌ Error closing database:', error);
+    }
+}
 
+// Export everything
+module.exports = {
+    initDatabase,
+    getConnectionStatus,
+    closeDatabase,
+    Appointment,
+    Contact,
+    Payment,
+    mongoose,
+    MONGODB_URI
+};
+
+console.log('📦 Database module loaded - MongoDB configuration ready');

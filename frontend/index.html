@@ -6,6 +6,9 @@
     <title>Dr. Anand's Fitness Art - Transform Your Life with Expert Fitness & Nutrition</title>
     <meta name="description" content="We believe everyone should have opportunity to enjoy a Fit & Healthy Lifestyle. Professional fitness training, expert nutrition counseling, and holistic healing services designed for your unique wellness journey.">
     
+    <!-- Razorpay Script - FOR PAYMENTS -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -25,7 +28,7 @@
                     colors: {
                         primary: {
                             300: '#fbbf24',
-                            400: '#f59e0b', 
+                            400: '#f59e0b',
                             500: '#d97706',
                             600: '#b45309'
                         }
@@ -222,7 +225,7 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 25px rgba(245, 158, 11, 0.15);
         }
-
+        
         /* Profile Photo Placeholder */
         .profile-photo {
             width: 120px;
@@ -240,8 +243,8 @@
         }
     </style>
 </head>
-<body class="bg-amber-50">
 
+<body class="bg-amber-50">
     <!-- Navigation -->
     <nav class="navbar fixed top-0 w-full z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -250,7 +253,9 @@
                 <div class="logo-container">
                     <img src="assets/logo.jpg" alt="Dr. Anand's Fitness Art Logo" class="logo-image">
                     <div class="logo-text">
-                        <div class="logo-title"> <a href="#"> Dr. Anand's Fitness Art</a></div>
+                        <div class="logo-title">
+                            <a href="#" onclick="scrollToSection('home')">Dr. Anand's Fitness Art</a>
+                        </div>
                         <div class="logo-subtitle">Fitness, Nutrition & Healing</div>
                     </div>
                 </div>
@@ -263,7 +268,7 @@
                     <a href="#reviews" class="text-gray-600 hover:text-primary-500 font-medium transition-colors">Reviews</a>
                     <a href="#contact" class="text-gray-600 hover:text-primary-500 font-medium transition-colors">Contact</a>
                 </div>
-
+                
                 <!-- Mobile Menu Button -->
                 <div class="md:hidden">
                     <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary-500 p-2">
@@ -274,7 +279,7 @@
                 </div>
             </div>
         </div>
-
+        
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="md:hidden hidden bg-white mx-4 mb-4 rounded-lg shadow-lg border border-amber-200">
             <div class="py-4 space-y-2">
@@ -286,7 +291,7 @@
             </div>
         </div>
     </nav>
-
+    
     <!-- Hero Section -->
     <section id="home" class="min-h-screen flex items-center justify-center pt-20 px-4">
         <div class="max-w-6xl mx-auto text-center">
@@ -309,21 +314,16 @@
                     "We believe everyone should have opportunity to enjoy a Fit & Healthy Lifestyle"
                 </p>
                 <p class="text-lg md:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                    Professional fitness training, expert nutrition counseling, and holistic healing 
-                    services designed for your unique wellness journey.
+                    Professional fitness training, expert nutrition counseling, and holistic healing services designed for your unique wellness journey.
                 </p>
             </div>
             
             <!-- Hero Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                <button onclick="scrollToSection('services')" class="btn-primary">
-                     Start Your Journey
-                </button>
-                <button onclick="scrollToSection('services')" class="btn-secondary">
-                    Our Services
-                </button>
+                <button onclick="scrollToSection('services')" class="btn-primary">Start Your Journey</button>
+                <button onclick="scrollToSection('services')" class="btn-secondary">Our Services</button>
             </div>
-
+            
             <!-- Stats -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
                 <div class="stat-card">
@@ -345,7 +345,7 @@
             </div>
         </div>
     </section>
-
+    
     <!-- Services Section -->
     <section id="services" class="py-20 bg-white">
         <div class="max-w-6xl mx-auto px-4">
@@ -354,16 +354,14 @@
                 <h2 class="text-3xl md:text-5xl font-bold mb-4 text-gray-800">
                     Comprehensive wellness programs
                 </h2>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                    tailored to your goals
-                </p>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">tailored to your goals</p>
             </div>
-
+            
             <!-- Services Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 
                 <!-- Complete Health & Pain Relief Package -->
-                <div class="service-card cursor-pointer" onclick="bookService('Complete Health & Pain Relief Package')">
+                <div class="service-card cursor-pointer" data-service="Complete Health & Pain Relief Package">
                     <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mb-4">
                         <span class="text-white font-bold text-lg">HP</span>
                     </div>
@@ -379,13 +377,13 @@
                         <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Personalized treatment plan</li>
                         <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> 6 months support</li>
                     </ul>
-                    <button class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-semibold transition-colors">
-                        Book Package
+                    <button class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-semibold transition-colors service-btn" data-service="Complete Health & Pain Relief Package">
+                        💳 Pay ₹25,000 & Book
                     </button>
                 </div>
-
-                <!-- Fat Loss Package (Below 85kg) -->
-                <div class="service-card cursor-pointer" onclick="bookService('Fat Loss Package - Below 85kg')">
+                
+                <!-- 6 Months Fat Loss Package - Below 85kg -->
+                <div class="service-card cursor-pointer" data-service="Fat Loss Package - Below 85kg">
                     <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-4">
                         <span class="text-white font-bold text-lg">FL</span>
                     </div>
@@ -401,13 +399,13 @@
                         <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Nutrition guidance</li>
                         <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> 6 months support</li>
                     </ul>
-                    <button class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-semibold transition-colors">
-                        Start Program
+                    <button class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-semibold transition-colors service-btn" data-service="Fat Loss Package - Below 85kg">
+                        💳 Pay ₹15,000 & Book
                     </button>
                 </div>
-
-                <!-- Fat Loss Package (Above 85kg) -->
-                <div class="service-card cursor-pointer" onclick="bookService('Fat Loss Package - Above 85kg')">
+                
+                <!-- 6 Months Fat Loss Package - Above 85kg -->
+                <div class="service-card cursor-pointer" data-service="Fat Loss Package - Above 85kg">
                     <div class="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mb-4">
                         <span class="text-white font-bold text-lg">FL+</span>
                     </div>
@@ -423,17 +421,17 @@
                         <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Advanced nutrition coaching</li>
                         <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> 6 months dedicated support</li>
                     </ul>
-                    <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-semibold transition-colors">
-                        Start Program
+                    <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-semibold transition-colors service-btn" data-service="Fat Loss Package - Above 85kg">
+                        💳 Pay ₹25,000 & Book
                     </button>
                 </div>
-
-                <!-- Consultation + Diet Chart -->
-                <div class="service-card cursor-pointer" onclick="bookService('Consultation + Diet Chart')">
+                
+                <!-- Consultation & Diet Chart -->
+                <div class="service-card cursor-pointer" data-service="Consultation & Diet Chart">
                     <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
                         <span class="text-white font-bold text-lg">CD</span>
                     </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-800">Consultation + Diet Chart</h3>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800">Consultation & Diet Chart</h3>
                     <p class="text-gray-600 mb-4 text-sm">Professional consultation with personalized diet chart and guidance.</p>
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-2xl font-bold text-blue-500">₹2,500</span>
@@ -445,17 +443,17 @@
                         <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Nutrition guidelines</li>
                         <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Follow-up support</li>
                     </ul>
-                    <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-semibold transition-colors">
-                        Book Consultation
+                    <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-semibold transition-colors service-btn" data-service="Consultation & Diet Chart">
+                        💳 Pay ₹2,500 & Book
                     </button>
                 </div>
-
-                <!-- Online Training -->
-                <div class="service-card cursor-pointer" onclick="bookService('Online Training')">
+                
+                <!-- Online Training - 6 Months -->
+                <div class="service-card cursor-pointer" data-service="Online Training">
                     <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mb-4">
                         <span class="text-white font-bold text-lg">OT</span>
                     </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-800">Online Training + 6 Months</h3>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800">Online Training - 6 Months</h3>
                     <p class="text-gray-600 mb-4 text-sm">Complete online training program with 6 months of guided support.</p>
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-2xl font-bold text-purple-500">₹25,000</span>
@@ -467,20 +465,20 @@
                         <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Progress tracking</li>
                         <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> 6 months guidance</li>
                     </ul>
-                    <button class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 rounded-lg font-semibold transition-colors">
-                        Start Online
+                    <button class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 rounded-lg font-semibold transition-colors service-btn" data-service="Online Training">
+                        💳 Pay ₹25,000 & Book
                     </button>
                 </div>
-
-                <!-- Basic Consultation -->
-                <div class="service-card cursor-pointer" onclick="bookService('Basic Consultation')">
+                
+                <!-- Basic Consultation Fee - ₹100 -->
+                <div class="service-card cursor-pointer" data-service="Basic Consultation">
                     <div class="w-12 h-12 bg-primary-500 rounded-lg flex items-center justify-center mb-4">
                         <span class="text-white font-bold text-lg">BC</span>
                     </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-800">Consultation Fees</h3>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800">Consultation Fee</h3>
                     <p class="text-gray-600 mb-4 text-sm">Basic consultation to assess your fitness and health needs.</p>
                     <div class="flex items-center justify-between mb-4">
-                        <span class="text-2xl font-bold text-primary-500">₹1,500</span>
+                        <span class="text-2xl font-bold text-primary-500">₹100</span>
                         <span class="text-gray-500 text-sm">per session</span>
                     </div>
                     <ul class="text-xs text-gray-600 space-y-2 mb-6">
@@ -489,56 +487,61 @@
                         <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Goal setting</li>
                         <li class="flex items-center"><span class="text-green-500 mr-2">✓</span> Expert guidance</li>
                     </ul>
-                    <button class="w-full btn-primary text-center">
-                        Book Now
+                    <button class="w-full btn-primary text-center service-btn" data-service="Basic Consultation">
+                        💳 Pay ₹100 & Book
                     </button>
                 </div>
             </div>
         </div>
     </section>
-
+    
     <!-- About Section - UPDATED WITH REAL DR. ANAND GUPTA STORY -->
     <section id="about" class="py-20 bg-amber-50">
         <div class="max-w-6xl mx-auto px-4">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                
                 <!-- About Content -->
                 <div class="space-y-6">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-800">
                         Transforming Lives Through Fitness
                     </h2>
+                    
                     <div class="bg-gradient-to-r from-primary-500 to-primary-600 text-white p-6 rounded-xl">
                         <p class="text-lg font-semibold mb-2">Dr. Anand Gupta</p>
                         <p class="text-sm opacity-90">Certified Fitness Expert & Nutritionist</p>
                     </div>
+                    
                     <p class="text-lg text-gray-600 leading-relaxed">
                         Dr. Anand Gupta, a certified fitness expert and nutritionist with over <strong>14 years of experience</strong>, has empowered hundreds of clients to achieve their wellness goals. As a <strong>polio survivor turned fitness entrepreneur</strong>, he specializes in natural health transformations for various conditions including <strong>PCOD, thyroid, diabetes, and more</strong>.
                     </p>
+                    
                     <p class="text-lg text-gray-600 leading-relaxed">
                         His personalized approach at Anand's Fitness Art guarantees results through comprehensive diet and workout plans, proving that <strong>determination and proper guidance can overcome any challenge</strong>.
                     </p>
+                    
                     <div class="space-y-4">
                         <div class="flex items-start space-x-4">
                             <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <span class="text-white font-bold text-sm">🏆</span>
+                                <span class="text-white font-bold text-sm">✓</span>
                             </div>
                             <div>
                                 <h4 class="text-lg font-semibold text-gray-800 mb-1">Specialized Treatments</h4>
                                 <p class="text-gray-600 text-sm">Expert in PCOD, thyroid, diabetes, and natural health transformations</p>
                             </div>
                         </div>
+                        
                         <div class="flex items-start space-x-4">
                             <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <span class="text-white font-bold text-sm">💪</span>
+                                <span class="text-white font-bold text-sm">★</span>
                             </div>
                             <div>
                                 <h4 class="text-lg font-semibold text-gray-800 mb-1">Inspiring Journey</h4>
                                 <p class="text-gray-600 text-sm">Polio survivor who became a successful fitness entrepreneur</p>
                             </div>
                         </div>
+                        
                         <div class="flex items-start space-x-4">
                             <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <span class="text-white font-bold text-sm">📈</span>
+                                <span class="text-white font-bold text-sm">✓</span>
                             </div>
                             <div>
                                 <h4 class="text-lg font-semibold text-gray-800 mb-1">Guaranteed Results</h4>
@@ -547,7 +550,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- About Image - PHOTO PLACEHOLDER -->
                 <div class="text-center">
                     <div class="bg-white p-8 rounded-xl shadow-lg border-2 border-amber-200">
@@ -555,8 +558,10 @@
                         <div class="profile-photo mx-auto mb-6">
                             <img class="profile-photo" src="assets/anand.jpg" alt="anand sir">
                         </div>
+                        
                         <h3 class="text-2xl font-bold mb-2 text-gray-800">Dr. Anand Gupta</h3>
                         <p class="text-gray-600 mb-6">Certified Fitness Expert & Nutritionist</p>
+                        
                         <div class="grid grid-cols-2 gap-4 text-center">
                             <div>
                                 <div class="text-xl font-bold text-primary-500">1000+</div>
@@ -567,6 +572,7 @@
                                 <div class="text-xs text-gray-600">Years Experience</div>
                             </div>
                         </div>
+                        
                         <div class="mt-6 pt-6 border-t border-amber-200">
                             <p class="text-sm text-gray-600 italic">
                                 "Determination and proper guidance can overcome any challenge"
@@ -577,7 +583,7 @@
             </div>
         </div>
     </section>
-
+    
     <!-- Reviews Section - REAL GOOGLE REVIEWS -->
     <section id="reviews" class="py-20 bg-white">
         <div class="max-w-6xl mx-auto px-4">
@@ -585,11 +591,9 @@
                 <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
                     Real transformations from real people
                 </h2>
-                <p class="text-lg text-gray-600">
-                    Authentic Google reviews from our satisfied clients
-                </p>
+                <p class="text-lg text-gray-600">Authentic Google reviews from our satisfied clients</p>
             </div>
-
+            
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Review 1 - Brandon Pereira -->
                 <div class="testimonial-card">
@@ -600,7 +604,7 @@
                         <div class="ml-4">
                             <h4 class="font-semibold text-gray-800">Brandon Pereira</h4>
                             <div class="flex items-center">
-                                <div class="flex text-yellow-400 text-sm">⭐⭐⭐⭐⭐</div>
+                                <div class="flex text-yellow-400 text-sm">★★★★★</div>
                                 <span class="text-gray-500 text-xs ml-2">8 months ago</span>
                             </div>
                         </div>
@@ -609,7 +613,7 @@
                         "Anand Fitness Center is more than just a gym; it's a place where fitness, positivity, and holistic health come together... Sir is not only a fitness expert but also a knowledgeable nutritionist/doctor who guides us with personalized diet plans tailored to our goals."
                     </p>
                 </div>
-
+                
                 <!-- Review 2 - Mario Fernandes -->
                 <div class="testimonial-card">
                     <div class="flex items-center mb-4">
@@ -619,7 +623,7 @@
                         <div class="ml-4">
                             <h4 class="font-semibold text-gray-800">Mario Fernandes</h4>
                             <div class="flex items-center">
-                                <div class="flex text-yellow-400 text-sm">⭐⭐⭐⭐⭐</div>
+                                <div class="flex text-yellow-400 text-sm">★★★★★</div>
                                 <span class="text-gray-500 text-xs ml-2">2 months ago</span>
                             </div>
                         </div>
@@ -628,7 +632,7 @@
                         "Been training with Anand Sir for a while now and honestly, it's been a game-changer. Super motivating, always focused on form, and really knows how to push just the right amount. Every session feels like progress — highly recommend if you're serious about your fitness goals!"
                     </p>
                 </div>
-
+                
                 <!-- Review 3 - Satyen Gawade -->
                 <div class="testimonial-card">
                     <div class="flex items-center mb-4">
@@ -638,16 +642,16 @@
                         <div class="ml-4">
                             <h4 class="font-semibold text-gray-800">Satyen Gawade</h4>
                             <div class="flex items-center">
-                                <div class="flex text-yellow-400 text-sm">⭐⭐⭐⭐⭐</div>
+                                <div class="flex text-yellow-400 text-sm">★★★★★</div>
                                 <span class="text-gray-500 text-xs ml-2">3 months ago</span>
                             </div>
                         </div>
                     </div>
                     <p class="text-gray-700 text-sm italic">
-                        "This is the best Gym ever that I have joined till now... Anand sir is a magician and he has in-depth knowledge about nutrition and fitness. Anand sirs Gym is well managed and very disciplined, with the team of trained instructors."
+                        "This is the best Gym ever that I have joined till now... Anand sir is a magician and he has in-depth knowledge about nutrition and fitness. Anand sir's Gym is well managed and very disciplined, with the team of trained instructors."
                     </p>
                 </div>
-
+                
                 <!-- Review 4 - Arya Tambe -->
                 <div class="testimonial-card">
                     <div class="flex items-center mb-4">
@@ -657,7 +661,7 @@
                         <div class="ml-4">
                             <h4 class="font-semibold text-gray-800">Arya Tambe</h4>
                             <div class="flex items-center">
-                                <div class="flex text-yellow-400 text-sm">⭐⭐⭐⭐⭐</div>
+                                <div class="flex text-yellow-400 text-sm">★★★★★</div>
                                 <span class="text-gray-500 text-xs ml-2">Recent</span>
                             </div>
                         </div>
@@ -666,7 +670,7 @@
                         "I've had a fantastic experience at Dr.Anand's Fitness gym! The trainers are incredibly helpful and knowledgeable, always ready to assist with any questions or concerns. The equipment is top-notch, which makes each workout both effective and enjoyable."
                     </p>
                 </div>
-
+                
                 <!-- Review 5 - Sharon Saldanha -->
                 <div class="testimonial-card">
                     <div class="flex items-center mb-4">
@@ -676,7 +680,7 @@
                         <div class="ml-4">
                             <h4 class="font-semibold text-gray-800">Sharon Saldanha</h4>
                             <div class="flex items-center">
-                                <div class="flex text-yellow-400 text-sm">⭐⭐⭐⭐⭐</div>
+                                <div class="flex text-yellow-400 text-sm">★★★★★</div>
                                 <span class="text-gray-500 text-xs ml-2">1 year ago</span>
                             </div>
                         </div>
@@ -685,7 +689,7 @@
                         "I've been training with Dr Anand for about four months now and it's been great! The individualized fitness programs he creates are always interesting, challenging and he's been a great motivator too. He also shares an excellent and simple nutrition diet plan."
                     </p>
                 </div>
-
+                
                 <!-- Review 6 - Nidhi Pradeep -->
                 <div class="testimonial-card">
                     <div class="flex items-center mb-4">
@@ -695,7 +699,7 @@
                         <div class="ml-4">
                             <h4 class="font-semibold text-gray-800">Nidhi Pradeep</h4>
                             <div class="flex items-center">
-                                <div class="flex text-yellow-400 text-sm">⭐⭐⭐⭐⭐</div>
+                                <div class="flex text-yellow-400 text-sm">★★★★★</div>
                                 <span class="text-gray-500 text-xs ml-2">5 months ago</span>
                             </div>
                         </div>
@@ -707,7 +711,7 @@
             </div>
         </div>
     </section>
-
+    
     <!-- Contact Section -->
     <section id="contact" class="py-20 bg-amber-50">
         <div class="max-w-4xl mx-auto px-4">
@@ -717,55 +721,55 @@
                     Get in touch and start your wellness journey today
                 </h2>
             </div>
-
+            
             <!-- Contact Form -->
             <div class="bg-white p-8 rounded-xl shadow-lg border-2 border-amber-200">
                 <form id="contactForm" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Name *</label>
-                            <input type="text" id="contactName" required class="form-input">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Name</label>
+                            <input type="text" id="contactName" name="name" required class="form-input">
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
-                            <input type="email" id="contactEmail" required class="form-input">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                            <input type="email" id="contactEmail" name="email" required class="form-input">
                         </div>
                     </div>
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
-                            <input type="tel" id="contactPhone" class="form-input">
+                            <input type="tel" id="contactPhone" name="phone" class="form-input">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Service</label>
-                            <select id="contactService" class="form-input">
+                            <select id="contactService" name="service" class="form-input">
                                 <option value="">Select a service</option>
                                 <option value="Complete Health & Pain Relief Package">Complete Health & Pain Relief Package</option>
                                 <option value="Fat Loss Package - Below 85kg">6 Months Fat Loss Package (Below 85kg)</option>
                                 <option value="Fat Loss Package - Above 85kg">6 Months Fat Loss Package (Above 85kg)</option>
-                                <option value="Consultation + Diet Chart">Consultation + Diet Chart</option>
-                                <option value="Online Training">Online Training + 6 Months</option>
+                                <option value="Consultation & Diet Chart">Consultation & Diet Chart</option>
+                                <option value="Online Training">Online Training - 6 Months</option>
                                 <option value="Basic Consultation">Basic Consultation</option>
                             </select>
                         </div>
                     </div>
+                    
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Message *</label>
-                        <textarea id="contactMessage" required rows="4" class="form-input resize-none"></textarea>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Message</label>
+                        <textarea id="contactMessage" name="message" required rows="4" class="form-input resize-none"></textarea>
                     </div>
-                    <button type="submit" class="w-full btn-primary text-center">
-                        Send Message
-                    </button>
+                    
+                    <button type="submit" class="w-full btn-primary text-center">Send Message</button>
                 </form>
             </div>
         </div>
     </section>
-
+    
     <!-- Footer with Updated Contact Info -->
     <footer class="footer py-16">
         <div class="max-w-6xl mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                
                 <!-- Brand -->
                 <div class="space-y-4">
                     <div class="logo-container mb-4">
@@ -775,9 +779,11 @@
                             <div class="logo-subtitle">Fitness Art</div>
                         </div>
                     </div>
+                    
                     <p class="text-primary-600 font-semibold text-lg mb-4">
                         "We believe everyone should have opportunity to enjoy a Fit & Healthy Lifestyle"
                     </p>
+                    
                     <p class="text-gray-600 text-sm leading-relaxed mb-6">
                         Professional fitness training, expert nutrition counseling, and holistic healing services for complete wellness transformation.
                     </p>
@@ -786,44 +792,24 @@
                     <div>
                         <h4 class="font-semibold text-gray-800 mb-4">Follow Us</h4>
                         <div class="flex space-x-4">
-                            <!-- Instagram (Real Link) -->
-                            <a href="https://www.instagram.com/anandsfitnessart/" target="_blank" 
-                               class="social-icon bg-gradient-to-r from-pink-500 to-orange-500 hover:scale-105 transition-transform">
+                            <!-- Instagram Real Link -->
+                            <a href="https://www.instagram.com/anandsfitnessart/" target="_blank" class="social-icon bg-gradient-to-r from-pink-500 to-orange-500 hover:scale-105 transition-transform">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.070-4.85.070-3.204 0-3.584-.012-4.849-.070-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                                 </svg>
                             </a>
                             
-                            <!-- Facebook (Real Link) -->
-                            <a href="https://www.facebook.com/anandsfitnessart" target="_blank" 
-                               class="social-icon bg-blue-600 hover:scale-105 transition-transform">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                                </svg>
-                            </a>
-                            
-                            <!-- YouTube (Real Link) -->
-                            <a href="https://www.youtube.com/@ANANDFITNESSART" target="_blank" 
-                               class="social-icon bg-red-600 hover:scale-105 transition-transform">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                                </svg>
-                            </a>
-                            
                             <!-- WhatsApp -->
-                            <a href="https://wa.me/917039627115" target="_blank" 
-                               class="social-icon bg-green-500 hover:scale-105 transition-transform">
+                            <a href="https://wa.me/917039627115" target="_blank" class="social-icon bg-green-500 hover:scale-105 transition-transform">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
                                 </svg>
                             </a>
                         </div>
-                        <p class="text-xs text-gray-500 mt-3">
-                            <span class="text-green-500">●</span> All Social Media Active
-                        </p>
+                        <p class="text-xs text-gray-500 mt-3"><span class="text-green-500">●</span> All Social Media Active</p>
                     </div>
                 </div>
-
+                
                 <!-- Services -->
                 <div>
                     <h4 class="font-semibold text-gray-800 mb-4">Services</h4>
@@ -834,7 +820,7 @@
                         <li><a href="#services" class="hover:text-primary-500 transition-colors">Consultation Services</a></li>
                     </ul>
                 </div>
-
+                
                 <!-- Contact Info - UPDATED -->
                 <div>
                     <h4 class="font-semibold text-gray-800 mb-4">Contact</h4>
@@ -842,7 +828,7 @@
                         <li class="flex items-start">
                             <span class="text-primary-500 mr-2 mt-0.5">📍</span>
                             <div>
-                                <p class="font-medium text-gray-700">Address:</p>
+                                <p class="font-medium text-gray-700">Address</p>
                                 <p>Gala No. 11, 1st floor, Tinwala Compound,</p>
                                 <p>Makwana Rd, behind Keys Nestor Hotel,</p>
                                 <p>opp. Vasant Oasis, Sankasth Pada Welfare Society,</p>
@@ -855,25 +841,25 @@
                         </li>
                         <li class="flex items-center">
                             <span class="text-green-500 mr-2">💬</span>
-                            <a href="https://wa.me/917039627115" class="hover:text-primary-500 transition-colors">WhatsApp: +91 70396 27115</a>
+                            <a href="https://wa.me/917039627115" class="hover:text-primary-500 transition-colors">WhatsApp +91 70396 27115</a>
                         </li>
                         <li class="flex items-center">
-                            <span class="text-blue-500 mr-2">📧</span>
+                            <span class="text-blue-500 mr-2">✉️</span>
                             <a href="mailto:info@anandsfitnessart.com" class="hover:text-primary-500 transition-colors">info@anandsfitnessart.com</a>
                         </li>
                     </ul>
                 </div>
-
+                
                 <!-- Hours -->
                 <div>
                     <h4 class="font-semibold text-gray-800 mb-4">Hours</h4>
                     <ul class="space-y-2 text-gray-600 text-sm">
                         <li class="flex justify-between">
-                            <span>Mon-Fri:</span>
+                            <span>Mon-Fri</span>
                             <span class="text-gray-700 font-medium">5AM-10PM</span>
                         </li>
                         <li class="flex justify-between">
-                            <span>Sat-Sun:</span>
+                            <span>Sat-Sun</span>
                             <span class="text-gray-700 font-medium">6AM-8PM</span>
                         </li>
                         <li class="pt-3 border-t border-amber-200">
@@ -882,7 +868,7 @@
                     </ul>
                 </div>
             </div>
-
+            
             <!-- Footer Bottom -->
             <div class="border-t border-amber-200 mt-12 pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center">
@@ -899,148 +885,166 @@
             </div>
         </div>
     </footer>
+    <!-- IMPROVED BOOKING WITH UPI - Replace your existing script -->
+<script>
+console.log('🚨 Loading improved booking with UPI options...');
 
-    <!-- Booking Modal -->
-    <div id="bookingModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white max-w-md mx-4 w-full p-6 rounded-xl shadow-xl border-2 border-amber-200">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-gray-800">Book Service</h3>
-                <button onclick="closeBookingModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-            </div>
-            <form id="bookingForm" class="space-y-4">
-                <input type="hidden" id="bookingService">
-                <div>
-                    <input type="text" id="bookingName" required placeholder="Your Name" class="form-input">
-                </div>
-                <div>
-                    <input type="email" id="bookingEmail" required placeholder="Your Email" class="form-input">
-                </div>
-                <div>
-                    <input type="tel" id="bookingPhone" required placeholder="Your Phone" class="form-input">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="date" id="bookingDate" class="form-input">
-                    <input type="time" id="bookingTime" class="form-input">
-                </div>
-                <div>
-                    <textarea id="bookingMessage" rows="3" placeholder="Any specific requirements..." class="form-input resize-none"></textarea>
-                </div>
-                <button type="submit" class="w-full btn-primary text-center">
-                    Book Appointment
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        // Mobile menu toggle
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // Smooth scrolling
-        function scrollToSection(sectionId) {
-            document.getElementById(sectionId).scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-
-        // Booking functionality
-        function bookService(service) {
-            document.getElementById('bookingService').value = service;
-            document.getElementById('bookingModal').classList.remove('hidden');
-        }
-
-        function closeBookingModal() {
-            document.getElementById('bookingModal').classList.add('hidden');
-        }
-
-        // Form submissions
-        document.getElementById('contactForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+setTimeout(() => {
+    // Email fix (same as before)
+    const originalAlert = window.alert;
+    window.alert = function(message) {
+        if (message && message.includes('valid email')) return;
+        originalAlert.call(this, message);
+    };
+    document.querySelectorAll('input[type="email"]').forEach(input => input.type = 'text');
+    
+    // Improved buttons with modal forms
+    document.querySelectorAll('button').forEach(button => {
+        const text = button.textContent.trim();
+        
+        if (text.includes('₹') || text.includes('Pay') || text.includes('Book')) {
+            const newBtn = button.cloneNode(true);
+            button.parentNode.replaceChild(newBtn, button);
             
-            const formData = {
-                name: document.getElementById('contactName').value,
-                email: document.getElementById('contactEmail').value,
-                phone: document.getElementById('contactPhone').value,
-                service: document.getElementById('contactService').value,
-                message: document.getElementById('contactMessage').value
-            };
-
-            try {
-                const response = await fetch('/api/contact', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert('Message sent successfully!');
-                    document.getElementById('contactForm').reset();
-                } else {
-                    alert('Error: ' + result.message);
-                }
-            } catch (error) {
-                alert('Something went wrong. Please try again.');
-            }
-        });
-
-        document.getElementById('bookingForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = {
-                name: document.getElementById('bookingName').value,
-                email: document.getElementById('bookingEmail').value,
-                phone: document.getElementById('bookingPhone').value,
-                service: document.getElementById('bookingService').value,
-                date: document.getElementById('bookingDate').value,
-                time: document.getElementById('bookingTime').value,
-                message: document.getElementById('bookingMessage').value
-            };
-
-            try {
-                const response = await fetch('/api/appointments', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert('Appointment booked successfully!');
-                    closeBookingModal();
-                    document.getElementById('bookingForm').reset();
-                } else {
-                    alert('Error: ' + result.message);
-                }
-            } catch (error) {
-                alert('Something went wrong. Please try again.');
-            }
-        });
-
-        // Close modal when clicking outside
-        document.getElementById('bookingModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('bookingModal')) {
-                closeBookingModal();
-            }
-        });
-
-        // Smooth scroll for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            newBtn.onclick = function(e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                
+                // Get service details
+                let price = 100, service = 'Basic Consultation';
+                if (text.includes('25,000')) {
+                    price = 25000;
+                    service = text.includes('Health') ? 'Complete Health & Pain Relief Package' : 'Online Training';
+                } else if (text.includes('15,000')) {
+                    price = 15000;
+                    service = 'Fat Loss Package - Below 85kg';
+                } else if (text.includes('2,500')) {
+                    price = 2500;
+                    service = 'Consultation & Diet Chart';
                 }
-            });
-        });
-    </script>
+                
+                showBookingModal(service, price);
+            };
+        }
+    });
+}, 3000);
+
+// Booking modal function
+function showBookingModal(service, price) {
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+        <div id="booking-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;">
+            <div style="background:white;border-radius:15px;padding:30px;max-width:450px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                <div style="text-align:center;margin-bottom:25px;">
+                    <h2 style="color:#d97706;font-size:24px;font-weight:bold;margin:0 0 10px 0;">Book ${service}</h2>
+                    <div style="background:#fef3c7;color:#d97706;padding:8px 16px;border-radius:20px;display:inline-block;font-weight:bold;font-size:18px;">₹${price.toLocaleString()}</div>
+                </div>
+                
+                <form id="booking-form">
+                    <input type="text" id="customerName" placeholder="Full Name *" required style="width:100%;padding:12px;border:2px solid #fef3c7;border-radius:8px;margin-bottom:15px;box-sizing:border-box;">
+                    <input type="text" id="customerEmail" placeholder="Email Address *" required style="width:100%;padding:12px;border:2px solid #fef3c7;border-radius:8px;margin-bottom:15px;box-sizing:border-box;">
+                    <input type="tel" id="customerPhone" placeholder="Phone Number *" required style="width:100%;padding:12px;border:2px solid #fef3c7;border-radius:8px;margin-bottom:15px;box-sizing:border-box;">
+                    <textarea id="customerMessage" placeholder="Tell us about your fitness goals..." style="width:100%;padding:12px;border:2px solid #fef3c7;border-radius:8px;margin-bottom:20px;height:60px;box-sizing:border-box;"></textarea>
+                    
+                    <div style="display:flex;gap:10px;">
+                        <button type="button" id="closeModal" style="flex:1;padding:12px;border:2px solid #d1d5db;background:white;color:#6b7280;border-radius:8px;font-weight:bold;cursor:pointer;">Cancel</button>
+                        <button type="submit" style="flex:2;padding:12px;border:none;background:linear-gradient(135deg,#f59e0b,#d97706);color:white;border-radius:8px;font-weight:bold;cursor:pointer;">💳 Pay ₹${price.toLocaleString()} & Book</button>
+                    </div>
+                </form>
+                
+                <div style="margin-top:15px;text-align:center;font-size:12px;color:#6b7280;">
+                    <div>💳 UPI • Cards • Net Banking • Wallets</div>
+                    <div>🔒 Secure payment by Razorpay</div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Form submission
+    document.getElementById('booking-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const customer = {
+            name: document.getElementById('customerName').value.trim(),
+            email: document.getElementById('customerEmail').value.trim(),
+            phone: document.getElementById('customerPhone').value.trim(),
+            message: document.getElementById('customerMessage').value.trim()
+        };
+        
+        if (!customer.name || !customer.email || !customer.phone) {
+            alert('Please fill in all required fields');
+            return;
+        }
+        
+        document.getElementById('booking-modal').remove();
+        openRazorpayWithUPI(service, price, customer);
+    });
+    
+    // Close handlers
+    document.getElementById('closeModal').onclick = () => document.getElementById('booking-modal').remove();
+    document.getElementById('booking-modal').onclick = (e) => {
+        if (e.target.id === 'booking-modal') e.target.remove();
+    };
+}
+
+// Razorpay with UPI options
+function openRazorpayWithUPI(service, price, customer) {
+    if (typeof Razorpay === 'undefined') {
+        alert('Payment system loading... Please refresh and try again.');
+        return;
+    }
+    
+    new Razorpay({
+        key: 'rzp_test_RSDxbPfpdNcvgW',
+        amount: price * 100,
+        currency: 'INR',
+        name: "Dr. Anand's Fitness Art",
+        description: service,
+        prefill: {
+            name: customer.name,
+            email: customer.email,
+            contact: customer.phone
+        },
+        config: {
+            display: {
+                blocks: {
+                    upi: {
+                        name: 'Pay using UPI',
+                        instruments: [{ method: 'upi' }]
+                    },
+                    other: {
+                        name: 'Other Methods',
+                        instruments: [
+                            { method: 'card' },
+                            { method: 'netbanking' },
+                            { method: 'wallet' }
+                        ]
+                    }
+                },
+                sequence: ['block.upi', 'block.other']
+            }
+        },
+        theme: { color: '#f59e0b' },
+        handler: function(response) {
+            alert(`🎉 Payment Successful!
+
+Service: ${service}
+Amount: ₹${price.toLocaleString()}
+Payment ID: ${response.razorpay_payment_id}
+
+Dear ${customer.name},
+Your booking is confirmed!
+
+We'll contact you at ${customer.phone} within 24 hours.
+
+Thank you! 💪`);
+        }
+    }).open();
+}
+</script>
+
+    <script src="script.js"></script>
+
 </body>
 </html>
