@@ -127,43 +127,51 @@ function initContactForm() {
 
 // SERVICE BUTTONS (your existing code with FIXED payment integration)
 function initServiceButtons() {
-    const serviceButtons = document.querySelectorAll('.service-btn, button[class*="btn"]');
-    console.log('🔘 Found', serviceButtons.length, 'service buttons');
+  const serviceButtons = document.querySelectorAll('.service-btn, button[class*="btn"]');
+  serviceButtons.forEach(origBtn => {
+    const text = origBtn.textContent.trim();
 
-    serviceButtons.forEach(button => {
-        const text = button.textContent.trim();
+    if (text.includes('Pay') || text.includes('Book')) {
+      // Create and use newBtn consistently
+      const newBtn = origBtn.cloneNode(true);
+      origBtn.parentNode.replaceChild(newBtn, origBtn);
 
-        if (text.includes('Pay') || text.includes('Book')) {
-            const newBtn = button.cloneNode(true);
-            button.parentNode.replaceChild(newBtn, button);
+      newBtn.addEventListener('click', async e => {
+        e.preventDefault();
+        console.log('💳 Service button clicked:', text);
 
-            newBtn.onclick = function(e) {
-                e.preventDefault();
-                console.log('💳 Service button clicked:', text);
-
-                let price = 10000, service = 'Basic Consultation'; // Default ₹100 in paise
-
-                if (text.includes('25,000')) {
-                    price = 2500000; // ₹25,000 in paise
-                    service = text.includes('Health') ? 'Complete Health & Pain Relief Package' : 'Online Training';
-                } else if (text.includes('15,000')) {
-                    price = 1500000; // ₹15,000 in paise
-                    service = 'Fat Loss Package - Below 85kg';
-                } else if (text.includes('2,500')) {
-                    price = 250000; // ₹2,500 in paise
-                    service = 'Consultation & Diet Chart';
-                }
-
-                showBookingModal(service, price);
-            };
-        } else if (text.includes('Start') || text.includes('Service')) {
-            newBtn.onclick = () => scrollToSection('services');
+        // Determine price & service
+        let price = 10000, service = 'Basic Consultation';
+        if (text.includes('25,000')) {
+          price = 2500000;
+          service = text.includes('Health') ? 'Complete Health & Pain Relief Package' : 'Online Training';
+        } else if (text.includes('15,000')) {
+          price = 1500000;
+          service = 'Fat Loss Package - Below 85kg';
+        } else if (text.includes('2,500')) {
+          price = 250000;
+          service = 'Consultation & Diet Chart';
         }
-    });
+
+        showBookingModal(service, price);
+      });
+
+    } else {
+      // Non-payment buttons keep original handlers (e.g. navigation)
+      origBtn.addEventListener('click', e => {
+        if (text.toLowerCase().includes('start') || text.toLowerCase().includes('service')) {
+          e.preventDefault();
+          scrollToSection('services');
+        }
+      });
+    }
+  });
+
+
 
     console.log('✅ Service buttons initialized');
-}
 
+}
 // BOOKING MODAL (your existing design)
 function showBookingModal(service, price) {
     console.log('📋 Opening booking modal for:', service, '₹' + (price/100));
