@@ -1,17 +1,12 @@
-// MINIMAL FIX for Dr. Anand's Fitness Art - ONLY fixes payment issue
-// This preserves your existing code and ONLY adds missing payment verification
+const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+    ? 'http://localhost:5000/api' 
+    : '/api';
+
+console.log('🚀 Loading Dr. Anand\'s Fitness Art with payment fix...');
+console.log('🔗 API Base URL:', API_BASE_URL);
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Loading Dr. Anand\'s Fitness Art with payment fix...');
-
-    // Configuration  
-    const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
-        ? 'http://localhost:5000/api' 
-        : '/api';
-
-    console.log('🔗 API Base URL:', API_BASE_URL);
-
-    // Initialize components
+    // Initialize all components
     setTimeout(() => {
         console.log('⚡ Initializing components...');
 
@@ -25,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
 });
 
-// EMAIL VALIDATION FIX (your existing code)
+// EMAIL VALIDATION FIX
 function fixEmailValidation() {
     console.log('🔧 Fixing email validation...');
 
@@ -45,7 +40,7 @@ function fixEmailValidation() {
     console.log('✅ Email validation fixed');
 }
 
-// CONTACT FORM (your existing code)
+// CONTACT FORM
 function initContactForm() {
     const contactForm = document.getElementById('contactForm');
     if (!contactForm) {
@@ -125,54 +120,44 @@ function initContactForm() {
     console.log('✅ Contact form initialized successfully');
 }
 
-// SERVICE BUTTONS (your existing code with FIXED payment integration)
+// SERVICE BUTTONS
 function initServiceButtons() {
-  const serviceButtons = document.querySelectorAll('.service-btn, button[class*="btn"]');
-  serviceButtons.forEach(origBtn => {
-    const text = origBtn.textContent.trim();
+    const serviceButtons = document.querySelectorAll('.service-btn, button[class*="btn"]');
+    console.log('🔘 Found', serviceButtons.length, 'service buttons');
 
-    if (text.includes('Pay') || text.includes('Book')) {
-      // Create and use newBtn consistently
-      const newBtn = origBtn.cloneNode(true);
-      origBtn.parentNode.replaceChild(newBtn, origBtn);
+    serviceButtons.forEach(button => {
+        const text = button.textContent.trim();
 
-      newBtn.addEventListener('click', async e => {
-        e.preventDefault();
-        console.log('💳 Service button clicked:', text);
+        if (text.includes('Pay') || text.includes('Book')) {
+            const newBtn = button.cloneNode(true);
+            button.parentNode.replaceChild(newBtn, button);
 
-        // Determine price & service
-        let price = 10000, service = 'Basic Consultation';
-        if (text.includes('25,000')) {
-          price = 2500000;
-          service = text.includes('Health') ? 'Complete Health & Pain Relief Package' : 'Online Training';
-        } else if (text.includes('15,000')) {
-          price = 1500000;
-          service = 'Fat Loss Package - Below 85kg';
-        } else if (text.includes('2,500')) {
-          price = 250000;
-          service = 'Consultation & Diet Chart';
+            newBtn.onclick = function(e) {
+                e.preventDefault();
+                console.log('💳 Service button clicked:', text);
+
+                let price = 10000, service = 'Basic Consultation';
+
+                if (text.includes('25,000')) {
+                    price = 2500000;
+                    service = text.includes('Health') ? 'Complete Health & Pain Relief Package' : 'Online Training';
+                } else if (text.includes('15,000')) {
+                    price = 1500000;
+                    service = 'Fat Loss Package - Below 85kg';
+                } else if (text.includes('2,500')) {
+                    price = 250000;
+                    service = 'Consultation & Diet Chart';
+                }
+
+                showBookingModal(service, price);
+            };
         }
-
-        showBookingModal(service, price);
-      });
-
-    } else {
-      // Non-payment buttons keep original handlers (e.g. navigation)
-      origBtn.addEventListener('click', e => {
-        if (text.toLowerCase().includes('start') || text.toLowerCase().includes('service')) {
-          e.preventDefault();
-          scrollToSection('services');
-        }
-      });
-    }
-  });
-
-
+    });
 
     console.log('✅ Service buttons initialized');
-
 }
-// BOOKING MODAL (your existing design)
+
+// BOOKING MODAL
 function showBookingModal(service, price) {
     console.log('📋 Opening booking modal for:', service, '₹' + (price/100));
 
@@ -231,7 +216,6 @@ function showBookingModal(service, price) {
 
     document.body.appendChild(modal);
 
-    // Set minimum date
     const dateInput = document.getElementById('customerDate');
     if (dateInput) {
         const tomorrow = new Date();
@@ -239,7 +223,6 @@ function showBookingModal(service, price) {
         dateInput.min = tomorrow.toISOString().split('T')[0];
     }
 
-    // Form submission
     document.getElementById('booking-form').addEventListener('submit', async function(e) {
         e.preventDefault();
 
@@ -266,14 +249,13 @@ function showBookingModal(service, price) {
         openRazorpayPayment(service, price, customer);
     });
 
-    // Close handlers
     document.getElementById('closeModal').onclick = () => document.getElementById('booking-modal').remove();
     document.getElementById('booking-modal').onclick = (e) => {
         if (e.target.id === 'booking-modal') e.target.remove();
     };
 }
 
-// RAZORPAY PAYMENT - FIXED VERSION
+// RAZORPAY PAYMENT
 async function openRazorpayPayment(service, price, customer) {
     try {
         console.log('💳 Opening Razorpay payment for:', service, '₹' + (price/100));
@@ -283,7 +265,6 @@ async function openRazorpayPayment(service, price, customer) {
             return;
         }
 
-        // Create order on backend
         let orderData = null;
         try {
             console.log('📦 Creating order on backend...');
@@ -294,7 +275,7 @@ async function openRazorpayPayment(service, price, customer) {
                 },
                 body: JSON.stringify({
                     service: service,
-                    amount: price, // Already in paise
+                    amount: price,
                     customerinfo: customer
                 })
             });
@@ -310,7 +291,6 @@ async function openRazorpayPayment(service, price, customer) {
             console.log('⚠️ Backend order creation failed:', backendError);
         }
 
-        // Configure Razorpay
         const options = {
             key: 'rzp_test_RSDxbPfpdNcvgW',
             amount: orderData ? orderData.amount : price,
@@ -329,7 +309,6 @@ async function openRazorpayPayment(service, price, customer) {
             handler: async function(response) {
                 console.log('✅ Payment successful:', response);
 
-                // FIXED: Always verify payment on backend
                 try {
                     await verifyPayment(response, customer, service);
                 } catch (verifyError) {
@@ -351,7 +330,7 @@ async function openRazorpayPayment(service, price, customer) {
     }
 }
 
-// FIXED: Payment verification with proper error handling
+// VERIFY PAYMENT
 async function verifyPayment(razorpayResponse, customer, service) {
     try {
         console.log('🔍 Verifying payment...');
@@ -390,7 +369,7 @@ async function verifyPayment(razorpayResponse, customer, service) {
     }
 }
 
-// Success message
+// SUCCESS MESSAGE
 function showSuccessMessage(response, service, customer, customMessage) {
     const message = customMessage || `
 🎉 Payment Successful!
@@ -408,7 +387,7 @@ Thank you for choosing Dr. Anand's Fitness Art!
     console.log('🎯 Booking completed successfully');
 }
 
-// NAVIGATION (your existing code)
+// NAVIGATION
 function initNavigation() {
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -435,7 +414,7 @@ window.scrollToSection = function(sectionId) {
     }
 };
 
-// NOTIFICATION SYSTEM (your existing code)
+// NOTIFICATION SYSTEM
 function showNotification(message, type = 'info') {
     console.log('🔔 Notification:', type, message);
 
@@ -451,7 +430,6 @@ function showNotification(message, type = 'info') {
         </div>
     `;
 
-    // Add CSS if not present
     if (!document.querySelector('#notification-styles')) {
         const styles = document.createElement('style');
         styles.id = 'notification-styles';
@@ -484,7 +462,6 @@ function showNotification(message, type = 'info') {
     }
 
     document.body.appendChild(notification);
-
     setTimeout(() => notification.classList.add('show'), 100);
 
     const hideDelay = type === 'success' ? 10000 : 7000;
